@@ -162,7 +162,8 @@ export function useConversations(
       setLoading(false)
       loadedUserIdRef.current = null
     }
-  }, [autoLoad, user?.id, loadConversations])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoLoad, user?.id])
   
   /**
    * Create a new conversation
