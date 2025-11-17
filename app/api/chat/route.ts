@@ -3,6 +3,7 @@ import { streamText, convertToModelMessages, type UIMessage } from 'ai';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { conversationManager } from '@/services/chat/conversationManager';
 import { schemeDataService } from '@/services/schemes/schemeDataService';
+import { extractionTriggerService } from '@/services/analytics/extractionTriggerService';
 
 // Edge runtime for streaming
 export const runtime = 'edge';
@@ -247,6 +248,20 @@ export async function POST(request: NextRequest) {
         // Log token usage and cost estimation
         if (process.env.ENABLE_DEBUG_LOGS === 'true') {
           console.log(`Session: ${session.id}, Finish reason: ${finishReason}`);
+        }
+
+        // Trigger extraction job if conditions are met (async, non-blocking)
+        if (conversationId) {
+          try {
+            const shouldTrigger = await extractionTriggerService.shouldTriggerExtraction(conversationId);
+            if (shouldTrigger) {
+              console.log('[Chat API] Triggering extraction for conversation:', conversationId);
+              await extractionTriggerService.queueExtractionJob(conversationId, 'normal');
+            }
+          } catch (error) {
+            // Log error but don't fail the chat response
+            console.error('[Chat API] Failed to trigger extraction:', error);
+          }
         }
       }
     });

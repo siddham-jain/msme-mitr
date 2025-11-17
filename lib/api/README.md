@@ -353,14 +353,6 @@ interface ErrorResponse {
 7. **Use try-catch**: Wrap database operations in try-catch blocks
 8. **Return consistent responses**: Use the success helpers for consistent response format
 
-## Testing
-
-The utilities include comprehensive tests. Run them with:
-
-```bash
-npm test -- lib/api/__tests__/auth.integration.test.ts
-```
-
 ## Security Considerations
 
 - ✅ Uses Supabase Auth for secure token verification

@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
-import { ArrowLeft, Save, User, Building2, MapPin, Globe } from 'lucide-react'
+import { ArrowLeft, Save, User, Building2, MapPin, Globe, LogOut } from 'lucide-react'
 import type { UserProfileUpdate } from '@/types/database'
 
 // ============================================================================
@@ -76,7 +76,7 @@ const LANGUAGES = [
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, signOut } = useAuth()
   const { profile, loading: profileLoading, updateProfile } = useProfile()
   
   const [isEditing, setIsEditing] = useState(false)
@@ -152,6 +152,18 @@ export default function ProfilePage() {
       })
     }
     setIsEditing(false)
+  }
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      toast.success('Logged out successfully')
+      router.push('/login')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      toast.error('Failed to log out')
+    }
   }
 
   // Loading state
@@ -500,6 +512,18 @@ export default function ProfilePage() {
                   </span>
                 </div>
               </div>
+              
+              <Separator className="my-4" />
+              
+              {/* Logout Button */}
+              <Button
+                variant="destructive"
+                className="w-full justify-center gap-2"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
             </CardContent>
           </Card>
         )}

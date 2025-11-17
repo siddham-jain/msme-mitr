@@ -13,6 +13,8 @@ import {
   MoreVertical,
   Pin,
   Loader2,
+  LogOut,
+  User,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -31,7 +33,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useConversations } from "@/hooks/useConversations";
+import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
 interface ChatSidebarProps {
@@ -51,6 +55,8 @@ export function ChatSidebar({
   refreshTrigger,
   onBrowseSchemes,
 }: ChatSidebarProps) {
+  const router = useRouter();
+  const { profile, signOut } = useAuth();
   const isHindi = language === "hi";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
@@ -134,6 +140,17 @@ export function ChatSidebar({
       await unpinConversation(chatId);
     } else {
       await pinConversation(chatId);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success(isHindi ? "सफलतापूर्वक लॉग आउट" : "Logged out successfully");
+      router.push("/login");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error(isHindi ? "लॉग आउट विफल" : "Failed to log out");
     }
   };
 
@@ -311,8 +328,39 @@ export function ChatSidebar({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t">
-        <p className="text-xs text-muted-foreground text-center">
+      <div className="p-4 border-t space-y-3">
+        {/* User Profile Section */}
+        {profile && (
+          <Link href="/profile">
+            <Button
+              variant="ghost"
+              className="w-full justify-start gap-2 h-auto py-2"
+            >
+              <User className="w-4 h-4 flex-shrink-0" />
+              <div className="flex-1 text-left min-w-0">
+                <p className="text-sm font-medium truncate">
+                  {profile.full_name || profile.email}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {isHindi ? "प्रोफ़ाइल देखें" : "View Profile"}
+                </p>
+              </div>
+            </Button>
+          </Link>
+        )}
+
+        {/* Logout Button */}
+        <Button
+          variant="outline"
+          className="w-full justify-start gap-2"
+          onClick={handleLogout}
+        >
+          <LogOut className="w-4 h-4" />
+          <span>{isHindi ? "लॉग आउट" : "Logout"}</span>
+        </Button>
+
+        {/* Chat Count */}
+        <p className="text-xs text-muted-foreground text-center pt-2">
           {isHindi
             ? `${conversations.length} चैट`
             : `${conversations.length} ${conversations.length === 1 ? 'chat' : 'chats'}`}

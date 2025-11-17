@@ -11,7 +11,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "migrate:schemes": "tsx scripts/migrate-schemes.ts",
-    "verify:schemes": "tsx scripts/verify-schemes-migration.ts"
+    "verify:schemes": "tsx scripts/verify-schemes-migration.ts",
+    "create-admin": "tsx scripts/create-admin-user.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.64",
@@ -51,6 +52,7 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.66.0",
     "react-markdown": "^10.1.0",
+    "recharts": "^3.4.1",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",

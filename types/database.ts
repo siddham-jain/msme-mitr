@@ -42,6 +42,21 @@ export interface Database {
         Insert: UserSchemeInsert
         Update: UserSchemeUpdate
       }
+      user_attributes: {
+        Row: UserAttribute
+        Insert: UserAttributeInsert
+        Update: UserAttributeUpdate
+      }
+      scheme_interests: {
+        Row: SchemeInterest
+        Insert: SchemeInterestInsert
+        Update: SchemeInterestUpdate
+      }
+      extraction_jobs: {
+        Row: ExtractionJob
+        Insert: ExtractionJobInsert
+        Update: ExtractionJobUpdate
+      }
     }
     Views: {
       [_ in never]: never
@@ -56,6 +71,11 @@ export interface Database {
       user_role: 'user' | 'admin' | 'super_admin'
       message_role: 'user' | 'assistant' | 'system'
       scheme_status: 'saved' | 'applied' | 'approved' | 'rejected'
+      business_size: 'Micro' | 'Small' | 'Medium'
+      extraction_method: 'ai' | 'manual' | 'inferred'
+      extraction_status: 'pending' | 'processing' | 'completed' | 'failed'
+      extraction_priority: 'high' | 'normal' | 'low'
+      interest_level: 'mentioned' | 'inquired' | 'detailed'
     }
   }
 }
@@ -393,6 +413,301 @@ export interface UserSchemeUpdate {
 // User scheme with full scheme details (for joined queries)
 export interface UserSchemeWithDetails extends UserScheme {
   scheme: Scheme
+}
+
+// ============================================================================
+// User Attribute Types (Analytics)
+// ============================================================================
+
+export interface UserAttribute {
+  id: string
+  user_id: string
+  conversation_id: string | null
+  
+  // Extracted attributes (normalized to English)
+  location: string | null
+  industry: string | null
+  business_size: 'Micro' | 'Small' | 'Medium' | null
+  annual_turnover: number | null
+  employee_count: number | null
+  
+  // Multilingual metadata
+  detected_languages: string[] | null
+  original_language_data: Json | null
+  
+  // Extraction metadata
+  extraction_confidence: number
+  extraction_method: 'ai' | 'manual' | 'inferred'
+  extracted_from_message_id: string | null
+  extraction_notes: string | null
+  
+  // Privacy & compliance
+  is_anonymized: boolean
+  anonymized_at: string | null
+  
+  // Timestamps
+  created_at: string
+  updated_at: string
+}
+
+export interface UserAttributeInsert {
+  id?: string
+  user_id: string
+  conversation_id?: string | null
+  
+  // Extracted attributes
+  location?: string | null
+  industry?: string | null
+  business_size?: 'Micro' | 'Small' | 'Medium' | null
+  annual_turnover?: number | null
+  employee_count?: number | null
+  
+  // Multilingual metadata
+  detected_languages?: string[] | null
+  original_language_data?: Json | null
+  
+  // Extraction metadata
+  extraction_confidence?: number
+  extraction_method?: 'ai' | 'manual' | 'inferred'
+  extracted_from_message_id?: string | null
+  extraction_notes?: string | null
+  
+  // Privacy & compliance
+  is_anonymized?: boolean
+  anonymized_at?: string | null
+  
+  // Timestamps (auto-generated, optional on insert)
+  created_at?: string
+  updated_at?: string
+}
+
+export interface UserAttributeUpdate {
+  user_id?: string
+  conversation_id?: string | null
+  
+  // Extracted attributes
+  location?: string | null
+  industry?: string | null
+  business_size?: 'Micro' | 'Small' | 'Medium' | null
+  annual_turnover?: number | null
+  employee_count?: number | null
+  
+  // Multilingual metadata
+  detected_languages?: string[] | null
+  original_language_data?: Json | null
+  
+  // Extraction metadata
+  extraction_confidence?: number
+  extraction_method?: 'ai' | 'manual' | 'inferred'
+  extracted_from_message_id?: string | null
+  extraction_notes?: string | null
+  
+  // Privacy & compliance
+  is_anonymized?: boolean
+  anonymized_at?: string | null
+  
+  // Timestamps
+  updated_at?: string
+}
+
+// ============================================================================
+// Scheme Interest Types (Analytics)
+// ============================================================================
+
+export interface SchemeInterest {
+  id: string
+  user_id: string
+  scheme_id: string
+  conversation_id: string | null
+  
+  // Interest metadata
+  interest_level: 'mentioned' | 'inquired' | 'detailed'
+  extracted_from_message_id: string | null
+  
+  // Multilingual tracking
+  mentioned_in_languages: string[] | null
+  
+  // Timestamps
+  first_mentioned_at: string
+  last_mentioned_at: string
+  mention_count: number
+  
+  // Privacy
+  is_anonymized: boolean
+}
+
+export interface SchemeInterestInsert {
+  id?: string
+  user_id: string
+  scheme_id: string
+  conversation_id?: string | null
+  
+  // Interest metadata
+  interest_level?: 'mentioned' | 'inquired' | 'detailed'
+  extracted_from_message_id?: string | null
+  
+  // Multilingual tracking
+  mentioned_in_languages?: string[] | null
+  
+  // Timestamps (auto-generated, optional on insert)
+  first_mentioned_at?: string
+  last_mentioned_at?: string
+  mention_count?: number
+  
+  // Privacy
+  is_anonymized?: boolean
+}
+
+export interface SchemeInterestUpdate {
+  user_id?: string
+  scheme_id?: string
+  conversation_id?: string | null
+  
+  // Interest metadata
+  interest_level?: 'mentioned' | 'inquired' | 'detailed'
+  extracted_from_message_id?: string | null
+  
+  // Multilingual tracking
+  mentioned_in_languages?: string[] | null
+  
+  // Timestamps
+  last_mentioned_at?: string
+  mention_count?: number
+  
+  // Privacy
+  is_anonymized?: boolean
+}
+
+// Scheme interest with full scheme details (for joined queries)
+export interface SchemeInterestWithDetails extends SchemeInterest {
+  scheme: Scheme
+}
+
+// ============================================================================
+// Extraction Job Types (Analytics)
+// ============================================================================
+
+export interface ExtractionJob {
+  id: string
+  conversation_id: string
+  user_id: string
+  
+  // Job status
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  priority: 'high' | 'normal' | 'low'
+  
+  // Processing metadata
+  message_count_at_extraction: number
+  retry_count: number
+  error_message: string | null
+  
+  // Timestamps
+  created_at: string
+  started_at: string | null
+  completed_at: string | null
+}
+
+export interface ExtractionJobInsert {
+  id?: string
+  conversation_id: string
+  user_id: string
+  
+  // Job status
+  status?: 'pending' | 'processing' | 'completed' | 'failed'
+  priority?: 'high' | 'normal' | 'low'
+  
+  // Processing metadata
+  message_count_at_extraction: number
+  retry_count?: number
+  error_message?: string | null
+  
+  // Timestamps (auto-generated, optional on insert)
+  created_at?: string
+  started_at?: string | null
+  completed_at?: string | null
+}
+
+export interface ExtractionJobUpdate {
+  conversation_id?: string
+  user_id?: string
+  
+  // Job status
+  status?: 'pending' | 'processing' | 'completed' | 'failed'
+  priority?: 'high' | 'normal' | 'low'
+  
+  // Processing metadata
+  message_count_at_extraction?: number
+  retry_count?: number
+  error_message?: string | null
+  
+  // Timestamps
+  started_at?: string | null
+  completed_at?: string | null
+}
+
+// ============================================================================
+// Analytics-Specific Types
+// ============================================================================
+
+export interface AnalyticsFilters {
+  dateRange?: {
+    startDate: string
+    endDate: string
+  }
+  location?: string
+  industry?: string
+  schemeId?: string
+  businessSize?: 'Micro' | 'Small' | 'Medium'
+  languages?: string[]
+}
+
+export interface AnalyticsSummary {
+  totalUsers: number
+  totalConversations: number
+  uniqueLocations: number
+  uniqueIndustries: number
+  
+  topSchemes: Array<{
+    schemeId: string
+    schemeName: string
+    interestCount: number
+    mentionedCount: number
+    inquiredCount: number
+    detailedCount: number
+  }>
+  
+  locationDistribution: Array<{
+    location: string
+    userCount: number
+    percentage: number
+  }>
+  
+  industryDistribution: Array<{
+    industry: string
+    userCount: number
+    percentage: number
+  }>
+  
+  conversationTrend: Array<{
+    date: string
+    conversationCount: number
+  }>
+  
+  languageDistribution: Array<{
+    language: string
+    userCount: number
+    percentage: number
+  }>
+}
+
+export interface PaginatedResult<T> {
+  data: T[]
+  pagination: {
+    page: number
+    pageSize: number
+    totalCount: number
+    totalPages: number
+  }
 }
 
 // ============================================================================
