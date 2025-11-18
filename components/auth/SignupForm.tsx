@@ -39,7 +39,7 @@ export function SignupForm() {
       setIsLoading(true)
       await signUp(data.email, data.password, data.fullName)
       toast.success('Account created successfully!')
-      router.push('/chat')
+      router.push('/chat-new')
     } catch (error: any) {
       console.error('Signup error:', error)
       

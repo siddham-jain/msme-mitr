@@ -50,17 +50,17 @@ export async function middleware(request: NextRequest) {
 
   // Define protected routes that require authentication
   const protectedRoutes = [
-    '/chat',
+    '/chat-new',
     '/profile',
     '/dashboard',
     '/applications',
     '/eligibility',
   ]
 
-  // Redirect root to /chat if authenticated, /login if not
+  // Redirect root to /chat-new if authenticated, /login if not
   if (pathname === '/') {
     if (user && !error) {
-      return NextResponse.redirect(new URL('/chat', request.url))
+      return NextResponse.redirect(new URL('/chat-new', request.url))
     } else {
       return NextResponse.redirect(new URL('/login', request.url))
     }
@@ -91,7 +91,7 @@ export async function middleware(request: NextRequest) {
   if (isAuthRoute && user && !error) {
     // Check if there's a redirect parameter
     const redirectTo = request.nextUrl.searchParams.get('redirectTo')
-    const redirectUrl = new URL(redirectTo || '/chat', request.url)
+    const redirectUrl = new URL(redirectTo || '/chat-new', request.url)
     return NextResponse.redirect(redirectUrl)
   }
 
