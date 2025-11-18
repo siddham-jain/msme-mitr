@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   MessageCircle,
   Search,
@@ -14,6 +15,7 @@ import {
   Phone,
   Globe,
   Bot,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -88,6 +90,7 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("en");
+  const { signOut, user } = useAuth();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -101,6 +104,15 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
       onMenuClick();
     } else {
       setIsMenuOpen(true);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
   };
 
@@ -193,6 +205,19 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
                 </Link>
               );
             })}
+
+            {/* Logout Button */}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-4 px-6 py-4 text-base transition-colors hover:bg-muted mt-auto"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium whitespace-nowrap">
+                  {currentLanguage === "hi" ? "लॉग आउट" : "Logout"}
+                </span>
+              </button>
+            )}
           </nav>
 
           <div className="p-4 border-t bg-muted/50">

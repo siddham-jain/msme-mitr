@@ -37,7 +37,7 @@ export function LoginForm() {
       setIsLoading(true)
       await signIn(data.email, data.password)
       toast.success('Welcome back!')
-      router.push('/chat')
+      router.push('/chat-new')
     } catch (error: any) {
       console.error('Login error:', error)
       

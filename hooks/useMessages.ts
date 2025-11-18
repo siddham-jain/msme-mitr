@@ -161,23 +161,23 @@ export function useMessages(
   }, [enableRealtime, conversationId])
   
   /**
-   * Add a new message with optimistic update
+   * Add a new message with optimistic update and AI response
    */
   const addMessage = useCallback(
     async (input: AddMessageInput): Promise<Message | null> => {
       const { role, content, parts } = input
-      
+
       if (!conversationId) {
         toast.error('No conversation selected')
         return null
       }
-      
+
       if (!user) {
         toast.error('You must be logged in to send messages')
         return null
       }
-      
-      // Create optimistic message
+
+      // Create optimistic user message
       const optimisticId = `optimistic_${Date.now()}_${Math.random().toString(36).substring(7)}`
       const optimisticMessage: Message = {
         id: optimisticId,
@@ -187,34 +187,45 @@ export function useMessages(
         parts: parts || null,
         created_at: new Date().toISOString(),
       }
-      
+
       // Add optimistic message to state
       optimisticIds.add(optimisticId)
       setMessages(prev => [...prev, optimisticMessage])
-      
+
       try {
-        // Add message to database
-        const newMessage = await messageService.addMessage(
-          conversationId,
-          role,
-          content,
-          parts
-        )
-        
-        // Replace optimistic message with real message
-        setMessages(prev =>
-          prev.map(msg => (msg.id === optimisticId ? newMessage : msg))
-        )
-        
-        // Remove from optimistic IDs
+        // Call AI chat API
+        const response = await fetch('/api/chat/send-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Get session token if available
+            ...(user ? {} : {})
+          },
+          body: JSON.stringify({
+            conversationId,
+            message: content,
+            userId: user.id
+          })
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Failed to send message')
+        }
+
+        const data = await response.json()
+
+        // Remove optimistic message and reload all messages from database
+        // (this will include both the user message and AI response)
         optimisticIds.delete(optimisticId)
-        
-        return newMessage
+        await loadMessages()
+
+        return data.message
       } catch (err) {
         // Remove optimistic message on error
         setMessages(prev => prev.filter(msg => msg.id !== optimisticId))
         optimisticIds.delete(optimisticId)
-        
+
         const error = err instanceof Error ? err : new Error('Failed to send message')
         setError(error)
         console.error('Error adding message:', error)
@@ -222,7 +233,7 @@ export function useMessages(
         return null
       }
     },
-    [conversationId, user, messageService, optimisticIds]
+    [conversationId, user, optimisticIds, loadMessages]
   )
   
   /**

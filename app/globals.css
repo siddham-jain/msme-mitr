@@ -1,392 +1,173 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Core Colors */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* ChatGPT-Inspired Color Palette */
+  --color-chatgpt-green: #10A37F;
+  --color-sidebar-dark: #343541;
+  --color-white: #FFFFFF;
+  --color-text-main: #40414F;
+  --color-text-muted: #8E8EA0;
+  --color-phone-blue: #007AFF;
 
-  /* Typography - Mobile Optimized Fonts */
-  --font-sans: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  /* Mobile-Optimized Font Sizes */
-  --font-size-xs: 0.875rem; /* 14px */
-  --font-size-sm: 1rem; /* 16px - Minimum for readability */
-  --font-size-base: 1.125rem; /* 18px - Better for mobile */
-  --font-size-lg: 1.25rem; /* 20px */
-  --font-size-xl: 1.5rem; /* 24px */
-  --font-size-2xl: 1.875rem; /* 30px */
-  --font-size-3xl: 2.25rem; /* 36px */
+  /* Spacing - Clean and consistent */
+  --spacing-1: 0.25rem;   /* 4px */
+  --spacing-2: 0.5rem;    /* 8px */
+  --spacing-3: 0.75rem;   /* 12px */
+  --spacing-4: 1rem;      /* 16px */
+  --spacing-6: 1.5rem;    /* 24px */
+  --spacing-8: 2rem;      /* 32px */
 
-  /* Touch-Friendly Spacing */
-  --spacing-touch: 3rem; /* 48px - Minimum touch target */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-
-  /* Component Colors */
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-
-  /* Border Radius - Softer for mobile */
-  --radius-sm: 0.375rem; /* 6px */
-  --radius-md: 0.5rem; /* 8px */
-  --radius-lg: 0.75rem; /* 12px */
-  --radius-xl: 1rem; /* 16px */
+  /* Border Radius */
+  --radius-sm: 0.5rem;    /* 8px */
+  --radius-md: 0.75rem;   /* 12px */
+  --radius-lg: 1rem;      /* 16px */
   --radius-full: 9999px;
 }
 
 :root {
   --radius: 0.75rem;
 
-  /* Indian Government Color Palette - Mobile Optimized */
-  /* Light Theme - High Contrast for Readability */
-  --background: oklch(0.985 0 0); /* Slightly off-white for eye comfort */
-  --foreground: oklch(0.15 0.01 0); /* Deep gray for text */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.01 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.01 0);
+  /* Map to shadcn variables */
+  --background: #FFFFFF;
+  --foreground: #40414F;
 
-  /* Saffron-inspired primary (Government Identity) */
-  --primary: oklch(0.65 0.18 45); /* Saffron orange */
-  --primary-foreground: oklch(1 0 0);
+  --card: #FFFFFF;
+  --card-foreground: #40414F;
 
-  /* Navy blue secondary (Government Identity) */
-  --secondary: oklch(0.3 0.1 250); /* Navy blue */
-  --secondary-foreground: oklch(1 0 0);
+  --popover: #FFFFFF;
+  --popover-foreground: #40414F;
 
-  /* Green accent (Success/Growth) */
-  --accent: oklch(0.45 0.15 140); /* Green */
-  --accent-foreground: oklch(1 0 0);
+  --primary: #10A37F;
+  --primary-foreground: #FFFFFF;
 
-  /* Muted tones */
-  --muted: oklch(0.95 0.01 60);
-  --muted-foreground: oklch(0.45 0.01 0);
+  --secondary: #343541;
+  --secondary-foreground: #FFFFFF;
 
-  /* Error/Destructive */
-  --destructive: oklch(0.55 0.25 25);
-  --destructive-foreground: oklch(0.985 0 0);
+  --muted: #F7F7F8;
+  --muted-foreground: #8E8EA0;
 
-  /* Borders & Inputs */
-  --border: oklch(0.88 0.01 60);
-  --input: oklch(0.92 0.01 60);
-  --ring: oklch(0.65 0.18 45); /* Focus ring matches primary */
+  --accent: #F7F7F8;
+  --accent-foreground: #40414F;
 
-  /* Charts - Indian flag inspired */
-  --chart-1: oklch(0.65 0.18 45); /* Saffron */
-  --chart-2: oklch(0.3 0.1 250); /* Navy Blue */
-  --chart-3: oklch(0.45 0.15 140); /* Green */
-  --chart-4: oklch(0.75 0.12 60); /* Gold */
-  --chart-5: oklch(0.5 0.08 200); /* Sky Blue */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
 
-  /* Sidebar */
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.15 0.01 0);
-  --sidebar-primary: oklch(0.65 0.18 45);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.01 60);
-  --sidebar-accent-foreground: oklch(0.15 0.01 0);
-  --sidebar-border: oklch(0.88 0.01 60);
-  --sidebar-ring: oklch(0.65 0.18 45);
-}
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #10A37F;
 
-.dark {
-  /* Enhanced Dark Mode - AMOLED friendly with vibrant accents */
-  --background: oklch(0.08 0 0); /* Pure black for AMOLED */
-  --foreground: oklch(0.95 0 0); /* Bright white for contrast */
-  --card: oklch(0.12 0 0); /* Slightly elevated black */
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.12 0 0);
-  --popover-foreground: oklch(0.95 0 0);
-
-  /* Vibrant saffron primary for dark mode */
-  --primary: oklch(0.7 0.20 50); /* Brighter saffron */
-  --primary-foreground: oklch(0.08 0 0); /* Dark text on saffron */
-
-  /* Navy blue secondary */
-  --secondary: oklch(0.25 0.08 250);
-  --secondary-foreground: oklch(0.95 0 0);
-
-  /* Muted tones - darker */
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-
-  /* Green accent for success */
-  --accent: oklch(0.55 0.18 145);
-  --accent-foreground: oklch(0.95 0 0);
-
-  /* Error/Destructive - vibrant red */
-  --destructive: oklch(0.60 0.24 25);
-  --destructive-foreground: oklch(0.95 0 0);
-
-  /* Borders & Inputs - subtle */
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.7 0.20 50); /* Saffron ring */
-
-  /* Charts - vibrant colors for dark mode */
-  --chart-1: oklch(0.7 0.20 50); /* Saffron */
-  --chart-2: oklch(0.65 0.20 250); /* Bright blue */
-  --chart-3: oklch(0.65 0.20 145); /* Green */
-  --chart-4: oklch(0.75 0.18 80); /* Gold */
-  --chart-5: oklch(0.70 0.15 200); /* Sky blue */
-
-  /* Sidebar */
-  --sidebar: oklch(0.10 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.7 0.20 50);
-  --sidebar-primary-foreground: oklch(0.08 0 0);
-  --sidebar-accent: oklch(0.18 0 0);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.7 0.20 50);
+  /* Sidebar specific */
+  --sidebar: #343541;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #10A37F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(255, 255, 255, 0.1);
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #10A37F;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
-  }
-
-  html {
-    /* Prevent text size adjustment on mobile */
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    /* Smooth scrolling */
-    scroll-behavior: smooth;
+    border-color: var(--border);
   }
 
   body {
-    @apply bg-background text-foreground;
-    /* Mobile-optimized base font size */
-    font-size: var(--font-size-base);
-    line-height: 1.6;
-    /* Better readability on mobile */
-    font-weight: 400;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Touch-friendly interactive elements */
-  button,
-  a,
-  input,
-  select,
-  textarea {
-    min-height: 48px; /* Minimum touch target size */
-    min-width: 48px;
+  /* Reset default margins and padding */
+  h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
   }
 
-  /* Better focus states for mobile */
-  :focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
-  }
-
-  /* Improved button styles for mobile */
   button {
-    touch-action: manipulation; /* Prevent double-tap zoom */
-    user-select: none;
-  }
-
-  /* Ensure inputs are readable on mobile */
-  input,
-  select,
-  textarea {
-    font-size: 16px; /* Prevents zoom on iOS */
-    @apply rounded-lg;
-  }
-
-  /* Typography optimized for readability */
-  h1 {
-    @apply text-2xl font-bold mb-4;
-    line-height: 1.3;
-  }
-
-  h2 {
-    @apply text-xl font-semibold mb-3;
-    line-height: 1.4;
-  }
-
-  h3 {
-    @apply text-lg font-medium mb-2;
-    line-height: 1.5;
-  }
-
-  p {
-    @apply mb-4;
-  }
-
-  /* Mobile-friendly spacing */
-  .container {
-    @apply px-4 mx-auto;
-    max-width: 100%;
-  }
-
-  /* Prevent horizontal scroll on mobile */
-  #__next {
-    overflow-x: hidden;
-  }
-}
-
-@layer components {
-  /* Touch-friendly button variants */
-  .btn-touch {
-    @apply min-h-[48px] px-6 py-3 text-base font-medium rounded-lg;
-    touch-action: manipulation;
-  }
-
-  /* Mobile-optimized card */
-  .card-mobile {
-    @apply rounded-xl p-4 shadow-sm border bg-card;
-  }
-
-  /* Bottom navigation for mobile */
-  .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-background border-t;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Top app bar for mobile */
-  .app-bar {
-    @apply sticky top-0 z-40 bg-background border-b;
-    padding-top: env(safe-area-inset-top);
-  }
-
-  /* Touch-friendly list items */
-  .list-item-touch {
-    @apply flex items-center min-h-[56px] px-4 py-3;
-  }
-
-  /* Icon button for mobile */
-  .icon-btn {
-    @apply flex items-center justify-center w-12 h-12 rounded-full;
+    font-family: inherit;
   }
 }
 
 @layer utilities {
-  /* Safe area padding for notches */
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
+  /* Text colors */
+  .text-chatgpt-green {
+    color: #10A37F;
   }
 
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+  .text-sidebar-dark {
+    color: #343541;
   }
 
-  .safe-left {
-    padding-left: env(safe-area-inset-left);
+  .text-main {
+    color: #40414F;
   }
 
-  .safe-right {
-    padding-right: env(safe-area-inset-right);
+  .text-muted {
+    color: #8E8EA0;
   }
 
-  /* Touch-friendly padding utilities */
-  .p-touch {
-    padding: var(--spacing-touch);
+  .text-phone-blue {
+    color: #007AFF;
   }
 
-  .px-touch {
-    padding-left: var(--spacing-touch);
-    padding-right: var(--spacing-touch);
+  /* Background colors */
+  .bg-chatgpt-green {
+    background-color: #10A37F;
   }
 
-  .py-touch {
-    padding-top: var(--spacing-touch);
-    padding-bottom: var(--spacing-touch);
+  .bg-sidebar-dark {
+    background-color: #343541;
   }
 
-  /* Disable text selection on interactive elements */
-  .no-select {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  .bg-phone-blue {
+    background-color: #007AFF;
   }
 
-  /* Smooth animations for mobile */
-  .transition-mobile {
-    transition: all 0.2s ease-out;
+  /* Border colors */
+  .border-chatgpt-green {
+    border-color: #10A37F;
   }
 
-  /* Chat-specific animations */
-  @keyframes slide-in-bottom {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .border-phone-blue {
+    border-color: #007AFF;
   }
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  /* Hover states */
+  .hover\:bg-chatgpt-green:hover {
+    background-color: #10A37F;
   }
 
-  .animate-slide-in {
-    animation: slide-in-bottom 0.3s ease-out;
+  .hover\:bg-chatgpt-green\/90:hover {
+    background-color: rgb(16 163 127 / 0.9);
   }
 
-  .animate-fade-in {
-    animation: fade-in 0.3s ease-out;
+  .hover\:bg-phone-blue\/10:hover {
+    background-color: rgb(0 122 255 / 0.1);
   }
 
-  /* Scrollbar styling for chat */
-  .chat-scrollbar::-webkit-scrollbar {
-    width: 4px;
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
   }
 
-  .chat-scrollbar::-webkit-scrollbar-track {
+  .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  .chat-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--muted-foreground);
-    border-radius: 9999px;
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 4px;
   }
 
-  .chat-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: var(--foreground);
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #D1D5DB;
   }
 }

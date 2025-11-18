@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase/client'
-import type { UserProfile, UserProfileUpdate } from '@/types/database'
+import type { UserProfile, UserProfileUpdate, UserProfileInsert } from '@/types/database'
 
 // ============================================================================
 // Types
@@ -83,23 +83,74 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Load user profile from database
+   * Creates a new profile if one doesn't exist
    */
   async function loadProfile(userId: string) {
     try {
+      // Try to get existing profile
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
-        .single()
+        .maybeSingle()
 
       if (error) {
         console.error('Error loading profile:', error)
         setProfile(null)
+        setLoading(false)
+        return
+      }
+
+      // If profile exists, use it
+      if (data) {
+        setProfile(data)
+        setLoading(false)
+        return
+      }
+
+      // If no profile exists, create one
+      console.log('No profile found, creating new profile for user:', userId)
+      await createProfile(userId)
+    } catch (error) {
+      console.error('Error loading profile:', error)
+      setProfile(null)
+      setLoading(false)
+    }
+  }
+
+  /**
+   * Create a new user profile
+   */
+  async function createProfile(userId: string) {
+    try {
+      const { data: authData } = await supabase.auth.getUser()
+      const userEmail = authData?.user?.email || ''
+      const fullName = authData?.user?.user_metadata?.full_name || null
+
+      const profileData: UserProfileInsert = {
+        id: userId,
+        email: userEmail,
+        full_name: fullName,
+        role: 'user',
+        language: 'en',
+        preferred_model: 'gpt-4o-mini',
+      }
+
+      const { data, error } = await (supabase
+        .from('user_profiles') as any)
+        .insert(profileData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error creating profile:', error)
+        setProfile(null)
       } else if (data) {
+        console.log('Profile created successfully')
         setProfile(data)
       }
     } catch (error) {
-      console.error('Error loading profile:', error)
+      console.error('Error creating profile:', error)
       setProfile(null)
     } finally {
       setLoading(false)
