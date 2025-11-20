@@ -110,15 +110,15 @@ async function verifyAdminUser() {
       .from('user_profiles')
       .select('*')
       .eq('id', authUser.id)
-      .single()
+      .single<Database['public']['Tables']['user_profiles']['Row']>()
 
-    if (profileError) {
-      if (profileError.code === 'PGRST116') {
+    if (profileError || !profile) {
+      if (profileError?.code === 'PGRST116') {
         console.log(`❌ Profile not found in user_profiles table`)
         console.log('\nCreate profile using:')
         console.log(`  npx tsx scripts/create-admin-user.ts ${email}`)
       } else {
-        console.error('❌ Error fetching profile:', profileError.message)
+        console.error('❌ Error fetching profile:', profileError?.message || 'No data returned')
       }
       process.exit(1)
     }

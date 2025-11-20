@@ -1,4 +1,4 @@
-# Authentication Context
+# Context Providers
 
 This directory contains React Context providers for managing global application state.
 
@@ -94,3 +94,81 @@ The `AuthProvider` is already wrapped around the application in `app/layout.tsx`
 ```
 
 This ensures the authentication context is available throughout the entire application.
+
+
+## ThemeContext
+
+The `ThemeContext` provides theme management (light/dark mode) throughout the application.
+
+### Features
+
+- **Theme State Management**: Manages current theme (light or dark)
+- **localStorage Persistence**: Saves theme preference to localStorage
+- **System Preference Detection**: Automatically detects system theme preference on initial load
+- **Dynamic Theme Switching**: Updates theme in real-time without page reload
+- **SSR Safe**: Prevents flash of unstyled content during server-side rendering
+
+### Usage
+
+```typescript
+import { useTheme } from '@/contexts/ThemeContext'
+
+function MyComponent() {
+  const { theme, setTheme } = useTheme()
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+      <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+        Toggle Theme
+      </button>
+    </div>
+  )
+}
+```
+
+### API
+
+#### State
+
+- `theme: 'light' | 'dark'` - Current active theme
+
+#### Methods
+
+- `setTheme(theme)` - Set the theme to 'light' or 'dark'
+
+### Implementation Details
+
+1. **Initial Load**: On mount, checks localStorage for saved theme preference
+2. **System Preference Fallback**: If no saved preference, uses system preference via `prefers-color-scheme`
+3. **localStorage Persistence**: Saves theme changes to localStorage for persistence across sessions
+4. **CSS Class Management**: Toggles 'dark' class on document root for Tailwind dark mode
+5. **Error Handling**: Gracefully handles localStorage errors (e.g., in private browsing mode)
+6. **Hydration Safety**: Prevents rendering until mounted to avoid SSR/client mismatch
+
+### Provider Setup
+
+Wrap your application with `ThemeProvider` in `app/layout.tsx`:
+
+```typescript
+<ThemeProvider>
+  <AuthProvider>
+    {children}
+  </AuthProvider>
+</ThemeProvider>
+```
+
+### Dark Mode Configuration
+
+The theme system works with Tailwind's dark mode. Ensure your `tailwind.config.ts` has:
+
+```typescript
+export default {
+  darkMode: 'class', // Uses class-based dark mode
+  // ... rest of config
+}
+```
+
+### Storage Key
+
+Theme preference is stored in localStorage with the key: `'theme'`

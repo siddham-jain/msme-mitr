@@ -264,8 +264,8 @@ export function ChatInterfaceStream({
 
     // Use requestAnimationFrame to batch DOM updates
     const resizeHandle = requestAnimationFrame(() => {
-      // Reset height to auto to get the correct scrollHeight
-      textarea.style.height = 'auto';
+      // Reset height to initial 40px to get the correct scrollHeight
+      textarea.style.height = '40px';
       
       // Calculate new height with max of 120px
       const newHeight = Math.min(textarea.scrollHeight, 120);
@@ -390,14 +390,14 @@ export function ChatInterfaceStream({
       {/* Loading Overlay - shown during conversation transitions */}
       {(transitionState === 'loading' || transitionState === 'transitioning') && (
         <div 
-          className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50"
+          className="absolute inset-0 bg-background/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
           role="status"
           aria-live="polite"
           aria-label={isHindi ? 'बातचीत लोड हो रही है' : 'Loading conversation'}
         >
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-primary" aria-hidden="true" />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-medium">
               {isHindi ? 'बातचीत लोड हो रही है...' : 'Loading conversation...'}
             </p>
           </div>
@@ -407,29 +407,31 @@ export function ChatInterfaceStream({
       {/* Error Overlay - shown when transition fails */}
       {transitionState === 'error' && transitionError && (
         <div 
-          className="absolute inset-0 bg-background/95 backdrop-blur-sm flex items-center justify-center z-50"
+          className="absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
           role="alert"
           aria-live="assertive"
         >
-          <Card className="max-w-md mx-4 border-destructive/20">
+          <Card className="max-w-md mx-4 border-destructive/30 shadow-lg">
             <div className="p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0" aria-hidden="true" />
-                <div>
-                  <h3 className="font-semibold text-destructive">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-destructive text-base">
                     {isHindi ? 'बातचीत लोड नहीं हो सकी' : 'Failed to load conversation'}
                   </h3>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
                     {transitionError.message || (isHindi ? 'कुछ गलत हो गया' : 'Something went wrong')}
                   </p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-2">
                 <Button
                   onClick={retryTransition}
                   className="flex-1"
+                  size="default"
                   aria-label={isHindi ? 'पुनः प्रयास करें' : 'Retry loading conversation'}
                 >
+                  <RefreshCw className="w-4 h-4 mr-2" />
                   {isHindi ? 'पुनः प्रयास करें' : 'Retry'}
                 </Button>
                 <Button
@@ -439,6 +441,7 @@ export function ChatInterfaceStream({
                   }}
                   variant="outline"
                   className="flex-1"
+                  size="default"
                   aria-label={isHindi ? 'रद्द करें' : 'Cancel'}
                 >
                   {isHindi ? 'रद्द करें' : 'Cancel'}
@@ -452,11 +455,30 @@ export function ChatInterfaceStream({
       {/* Scrollable Messages Area - grows to fill space */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="px-4 py-4">
+          <div className="py-4">
             {/* Offline Mode Message */}
-            <OfflineModeMessage />
+            <div className="px-4">
+              <OfflineModeMessage />
+            </div>
 
-            <div className="space-y-4 pb-4">
+            {/* Welcome Message - shown when no messages */}
+            {messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
+                {/* Welcome Text */}
+                <div className="text-center mb-8 space-y-3 w-full max-w-3xl px-6">
+                  <h1 className="text-3xl font-semibold mb-3 text-foreground whitespace-normal">
+                    {isHindi ? "MSME मित्र AI में आपका स्वागत है" : "Welcome to MSME Mitr AI"}
+                  </h1>
+                  <p className="text-muted-foreground text-base leading-relaxed whitespace-normal">
+                    {isHindi 
+                      ? "सरकारी योजनाओं और व्यवसाय सहायता के लिए आपका AI सहायक"
+                      : "Your AI assistant for government schemes and business support"}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-4 pb-4 px-4">
               {messages.map((message, index) => (
                 <MessageBubble
                   key={message.id}
@@ -468,15 +490,15 @@ export function ChatInterfaceStream({
 
               {/* Inline error display with retry button */}
               {(error || sendError) && (
-                <Card className="bg-destructive/10 border-destructive/20 p-4">
+                <Card className="bg-destructive/10 border-destructive/30 p-4 shadow-sm animate-slide-in">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <div className="flex-1 space-y-3">
                       <div>
-                        <p className="text-sm font-medium text-destructive mb-1">
+                        <p className="text-sm font-semibold text-destructive mb-1.5">
                           {isHindi ? 'संदेश भेजने में विफल' : 'Failed to send message'}
                         </p>
-                        <p className="text-sm text-destructive/80">
+                        <p className="text-sm text-destructive/90 leading-relaxed">
                           {getUserFriendlyErrorMessage(sendError || error, language)}
                         </p>
                       </div>
@@ -487,7 +509,7 @@ export function ChatInterfaceStream({
                           onClick={handleRetry}
                           size="sm"
                           variant="outline"
-                          className="border-destructive/30 text-destructive hover:bg-destructive/10"
+                          className="border-destructive/40 text-destructive hover:bg-destructive/15 transition-colors"
                           aria-label={isHindi ? 'संदेश पुनः भेजें' : 'Retry sending message'}
                         >
                           <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
@@ -501,10 +523,10 @@ export function ChatInterfaceStream({
 
               {/* Offline indicator in messages area */}
               {isOfflineMode && messages.length > 0 && (
-                <Card className="bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-900 p-3">
-                  <div className="flex items-center gap-2">
-                    <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
-                    <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                <Card className="bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800 p-3 shadow-sm animate-slide-in">
+                  <div className="flex items-center gap-2.5">
+                    <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" aria-hidden="true" />
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200 leading-relaxed">
                       {isHindi 
                         ? 'आप ऑफ़लाइन हैं। संदेश भेजने में समस्या हो सकती है।'
                         : 'You are offline. Messages may not send.'}
@@ -520,35 +542,35 @@ export function ChatInterfaceStream({
         </ScrollArea>
       </div>
 
-      {/* Quick Prompts - fixed position when visible */}
+      {/* Quick Prompts - shown below welcome message when no messages */}
       {messages.length === 0 && (
-        <div className="flex-shrink-0 px-4 pb-4" role="region" aria-label={isHindi ? "त्वरित प्रश्न" : "Quick questions"}>
-          <p className="text-xs text-muted-foreground mb-2">
-            {isHindi ? "त्वरित प्रश्न" : "Quick questions"}
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            {quickPrompts.map((prompt, idx) => (
-              <Button
-                key={idx}
-                variant="outline"
-                className="h-auto py-3 px-3 justify-start text-left"
-                onClick={() =>
-                  handleQuickPrompt(
-                    isHindi && prompt.textHi ? prompt.textHi : prompt.text
-                  )
-                }
-                disabled={isLoading}
-                aria-label={`${isHindi ? "त्वरित प्रश्न" : "Quick question"}: ${isHindi && prompt.textHi ? prompt.textHi : prompt.text}`}
-                tabIndex={0}
-              >
-                <div className="flex items-start gap-2">
-                  <span className="text-primary mt-0.5" aria-hidden="true">{prompt.icon}</span>
-                  <span className="text-xs line-clamp-2">
+        <div className="flex-shrink-0 px-6 pb-6 animate-fade-in" role="region" aria-label={isHindi ? "त्वरित प्रश्न" : "Quick questions"}>
+          <div className="w-full max-w-3xl mx-auto">
+            <p className="text-xs text-muted-foreground mb-4 text-center font-medium uppercase tracking-wide">
+              {isHindi ? "त्वरित प्रश्न" : "Quick questions"}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {quickPrompts.map((prompt, idx) => (
+                <Button
+                  key={idx}
+                  variant="outline"
+                  className="h-auto py-3.5 px-4 justify-start text-left hover:bg-muted/50 hover:border-muted-foreground/20 transition-all duration-200 flex items-center gap-3 whitespace-normal"
+                  onClick={() =>
+                    handleQuickPrompt(
+                      isHindi && prompt.textHi ? prompt.textHi : prompt.text
+                    )
+                  }
+                  disabled={isLoading}
+                  aria-label={`${isHindi ? "त्वरित प्रश्न" : "Quick question"}: ${isHindi && prompt.textHi ? prompt.textHi : prompt.text}`}
+                  tabIndex={0}
+                >
+                  <span className="text-muted-foreground flex-shrink-0 w-5 h-5 flex items-center justify-center" aria-hidden="true">{prompt.icon}</span>
+                  <span className="text-sm leading-snug flex-1 text-left">
                     {isHindi && prompt.textHi ? prompt.textHi : prompt.text}
                   </span>
-                </div>
-              </Button>
-            ))}
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -556,21 +578,21 @@ export function ChatInterfaceStream({
       {/* Fixed Input Area - stays at bottom */}
       <form 
         onSubmit={handleSubmit} 
-        className="flex-shrink-0 border-t bg-background p-4 safe-bottom"
+        className="flex-shrink-0 border-t border-border/60 bg-background p-3 safe-bottom shadow-sm"
         aria-label={isHindi ? "संदेश फॉर्म" : "Message form"}
       >
-        <div className="flex gap-2 items-end">
+        <div className="flex gap-2 items-end max-w-4xl mx-auto">
           <Button
             type="button"
             variant="ghost"
-            size="icon"
-            className="flex-shrink-0"
+            size="icon-sm"
+            className="flex-shrink-0 hover:bg-muted/50 transition-colors"
             onClick={() => toast.info('File attachment coming soon!')}
             aria-label={isHindi ? "फ़ाइल संलग्न करें" : "Attach file"}
             disabled={isLoading}
             tabIndex={0}
           >
-            <Paperclip className="w-5 h-5" />
+            <Paperclip className="w-4 h-4" />
           </Button>
 
           <div className="flex-1 relative">
@@ -581,11 +603,11 @@ export function ChatInterfaceStream({
               onKeyDown={handleKeyDown}
               placeholder={
                 isHindi
-                  ? "अपना प्रश्न टाइप करें या बोलें... (Enter से भेजें, Shift+Enter से नई लाइन)"
-                  : "Type your question or speak... (Enter to send, Shift+Enter for new line)"
+                  ? "संदेश लिखें..."
+                  : "Message MSME Mitr..."
               }
-              className="pr-10 min-h-[48px] max-h-[120px] text-base resize-none overflow-y-auto transition-[height] duration-100"
-              style={{ height: '48px' }}
+              className="pr-10 min-h-[40px] max-h-[120px] text-sm resize-none overflow-y-auto transition-[height] duration-100"
+              style={{ height: '40px' }}
               disabled={isLoading}
               aria-label={isHindi ? "संदेश इनपुट" : "Message input"}
               aria-describedby="message-hint"
@@ -595,9 +617,9 @@ export function ChatInterfaceStream({
             <Button
               type="button"
               variant="ghost"
-              size="icon"
-              className={`absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 ${
-                voice.isRecording ? 'bg-red-500/10' : ''
+              size="icon-sm"
+              className={`absolute right-1 top-1/2 -translate-y-1/2 transition-all duration-200 ${
+                voice.isRecording ? 'bg-red-500/15 hover:bg-red-500/20' : 'hover:bg-muted/50'
               }`}
               onClick={voice.toggleVoiceMode}
               aria-label={
@@ -612,7 +634,7 @@ export function ChatInterfaceStream({
               {voice.isTranscribing ? (
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
               ) : voice.isRecording ? (
-                <Square className="w-3 h-3 text-red-500" aria-hidden="true" />
+                <Square className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
               ) : (
                 <Mic className="w-4 h-4" aria-hidden="true" />
               )}
@@ -620,7 +642,7 @@ export function ChatInterfaceStream({
             {/* Voice recording indicator */}
             {voice.isRecording && (
               <div 
-                className="absolute -top-8 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse"
+                className="absolute -top-8 right-0 bg-red-500 text-white text-xs px-2.5 py-1 rounded-full animate-pulse shadow-md font-medium"
                 role="status"
                 aria-live="polite"
               >
@@ -639,7 +661,7 @@ export function ChatInterfaceStream({
                   'polite'
                 );
               }}
-              className="flex-shrink-0 btn-touch px-4"
+              className="flex-shrink-0 btn-touch px-4 transition-all duration-200"
               variant="destructive"
               aria-label={isHindi ? "संदेश रोकें" : "Stop message"}
               tabIndex={0}
@@ -650,12 +672,13 @@ export function ChatInterfaceStream({
             <Button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="flex-shrink-0 btn-touch px-4"
+              size="icon"
+              className="flex-shrink-0 transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
               aria-label={isHindi ? "संदेश भेजें" : "Send message"}
               aria-disabled={!input.trim() || isLoading}
               tabIndex={0}
             >
-              <Send className="w-5 h-5" aria-hidden="true" />
+              <Send className="w-4 h-4" aria-hidden="true" />
               <span className="sr-only">
                 {isHindi ? "संदेश भेजें" : "Send message"}
               </span>
@@ -666,13 +689,15 @@ export function ChatInterfaceStream({
         {/* Language Hint */}
         <p 
           id="message-hint" 
-          className="text-xs text-muted-foreground text-center mt-2"
+          className="text-xs text-muted-foreground text-center mt-2.5 max-w-4xl mx-auto flex items-center justify-center gap-1"
           aria-live="polite"
         >
-          <Sparkles className="w-3 h-3 inline mr-1" aria-hidden="true" />
-          {isHindi
-            ? "12 भाषाओं में बात करें • तत्काल सहायता"
-            : "Chat in 12 languages • Instant assistance"}
+          <Sparkles className="w-3 h-3" aria-hidden="true" />
+          <span>
+            {isHindi
+              ? "12 भाषाओं में बात करें"
+              : "Chat in 12 languages"}
+          </span>
         </p>
       </form>
     </div>

@@ -70,7 +70,7 @@ async function fixUserProfilesRLS() {
       DROP POLICY IF EXISTS "Users can insert own profile" ON user_profiles;
     `
     
-    const { error: dropError } = await supabase.rpc('exec_sql' as any, { sql: dropPolicies })
+    const { error: dropError } = await (supabase.rpc as any)('exec_sql', { sql: dropPolicies })
     
     if (dropError) {
       console.warn('⚠️  Could not drop policies (they may not exist):', dropError.message)
@@ -82,7 +82,7 @@ async function fixUserProfilesRLS() {
     
     const enableRLS = `ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;`
     
-    const { error: rlsError } = await supabase.rpc('exec_sql' as any, { sql: enableRLS })
+    const { error: rlsError } = await (supabase.rpc as any)('exec_sql', { sql: enableRLS })
     
     if (rlsError) {
       console.warn('⚠️  RLS may already be enabled:', rlsError.message)
@@ -117,7 +117,7 @@ async function fixUserProfilesRLS() {
       WITH CHECK (auth.uid() = id);
     `
     
-    const { error: createError } = await supabase.rpc('exec_sql' as any, { sql: createPolicies })
+    const { error: createError } = await (supabase.rpc as any)('exec_sql', { sql: createPolicies })
     
     if (createError) {
       console.error('❌ Failed to create policies:', createError.message)

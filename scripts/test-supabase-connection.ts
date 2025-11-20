@@ -86,12 +86,16 @@ async function testConnection() {
     // Test 4: Check RLS status
     console.log('Test 4: Check RLS Status')
     const start4 = Date.now()
-    const { data: rlsData, error: rlsError } = await supabase
-      .rpc('check_rls_status')
-      .catch(() => {
-        // If RPC doesn't exist, that's okay
-        return { data: null, error: null }
-      })
+    let rlsData = null
+    let rlsError = null
+    try {
+      const result = await supabase.rpc('check_rls_status')
+      rlsData = result.data
+      rlsError = result.error
+    } catch (err) {
+      // If RPC doesn't exist, that's okay
+      rlsError = null
+    }
     const duration4 = Date.now() - start4
     
     if (rlsError) {

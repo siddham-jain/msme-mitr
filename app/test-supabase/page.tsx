@@ -8,9 +8,10 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import type { UserProfile } from '@/types/database'
 
 export default function TestSupabasePage() {
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<UserProfile | null>(null)
   const [error, setError] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [logs, setLogs] = useState<string[]>([])
@@ -51,7 +52,7 @@ export default function TestSupabasePage() {
         .from('user_profiles')
         .select('id, email, role')
         .limit(1)
-        .single()
+        .single<UserProfile>()
 
       const duration = Date.now() - startTime
 
@@ -60,7 +61,7 @@ export default function TestSupabasePage() {
         addLog(`   Code: ${fetchError.code}`)
         addLog(`   Details: ${JSON.stringify(fetchError.details)}`)
         setError(fetchError)
-      } else {
+      } else if (data) {
         addLog(`✅ Fetch succeeded in ${duration}ms`)
         addLog(`   Profile: ${data.email}, role: ${data.role}`)
         setResult(data)

@@ -12,23 +12,23 @@
   --font-sans: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
-  /* Mobile-Optimized Font Sizes */
-  --font-size-xs: 0.875rem; /* 14px */
-  --font-size-sm: 1rem; /* 16px - Minimum for readability */
-  --font-size-base: 1.125rem; /* 18px - Better for mobile */
-  --font-size-lg: 1.25rem; /* 20px */
-  --font-size-xl: 1.5rem; /* 24px */
-  --font-size-2xl: 1.875rem; /* 30px */
+  /* Mobile-Optimized Font Sizes - Updated for compact design */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
   --font-size-3xl: 2.25rem; /* 36px */
 
-  /* Touch-Friendly Spacing */
+  /* Touch-Friendly Spacing - Updated for compact design */
   --spacing-touch: 3rem; /* 48px - Minimum touch target */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 0.75rem; /* 12px - reduced from 1rem */
+  --spacing-lg: 1rem; /* 16px - reduced from 1.5rem */
+  --spacing-xl: 1.5rem; /* 24px - reduced from 2rem */
+  --spacing-2xl: 2rem; /* 32px - reduced from 3rem */
 
   /* Component Colors */
   --color-sidebar-ring: var(--sidebar-ring);
@@ -106,6 +106,15 @@
   --input: oklch(0.92 0.01 60);
   --ring: oklch(0.65 0.18 45); /* Focus ring matches primary */
 
+  /* Subtle styling variables for ChatGPT-style design */
+  /* Usage: These variables provide more subtle styling for the minimalistic UI redesign */
+  /* - message-assistant-bg: Use for assistant message backgrounds (e.g., bg-[var(--message-assistant-bg)]) */
+  /* - hover-subtle: Use for subtle hover effects (e.g., hover:bg-[var(--hover-subtle)]) */
+  /* - border-subtle: Use for more subtle borders (e.g., border-[var(--border-subtle)]) */
+  --message-assistant-bg: oklch(from var(--muted) l c h / 0.5); /* Subtle background for assistant messages */
+  --hover-subtle: oklch(from var(--muted) l c h / 0.3); /* Subtle hover states */
+  --border-subtle: oklch(from var(--border) l c h / 0.5); /* More subtle borders */
+
   /* Charts - Indian flag inspired */
   --chart-1: oklch(0.65 0.18 45); /* Saffron */
   --chart-2: oklch(0.3 0.1 250); /* Navy Blue */
@@ -158,6 +167,12 @@
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.7 0.20 50); /* Saffron ring */
 
+  /* Subtle styling variables for ChatGPT-style design - Dark mode adjustments */
+  /* These variables automatically adjust for dark mode while maintaining the same subtle aesthetic */
+  --message-assistant-bg: oklch(from var(--muted) l c h / 0.5); /* Subtle background for assistant messages */
+  --hover-subtle: oklch(from var(--muted) l c h / 0.3); /* Subtle hover states */
+  --border-subtle: oklch(from var(--border) l c h / 0.5); /* More subtle borders */
+
   /* Charts - vibrant colors for dark mode */
   --chart-1: oklch(0.7 0.20 50); /* Saffron */
   --chart-2: oklch(0.65 0.20 250); /* Bright blue */
@@ -201,14 +216,16 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Touch-friendly interactive elements */
-  button,
-  a,
-  input,
-  select,
-  textarea {
-    min-height: 48px; /* Minimum touch target size */
-    min-width: 48px;
+  /* Touch-friendly interactive elements on mobile */
+  @media (max-width: 768px) {
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      min-height: 48px; /* Minimum touch target size */
+      min-width: 48px;
+    }
   }
 
   /* Better focus states for mobile */
@@ -343,11 +360,11 @@
     transition: all 0.2s ease-out;
   }
 
-  /* Chat-specific animations */
+  /* Chat-specific animations - Optimized timings */
   @keyframes slide-in-bottom {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -364,12 +381,25 @@
     }
   }
 
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
   .animate-slide-in {
-    animation: slide-in-bottom 0.3s ease-out;
+    animation: slide-in-bottom 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .animate-fade-in {
-    animation: fade-in 0.3s ease-out;
+    animation: fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   /* Scrollbar styling for chat */

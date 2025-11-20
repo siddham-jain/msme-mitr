@@ -10,11 +10,12 @@
 import { useAuth } from '@/contexts/AuthContext'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import type { UserProfile } from '@/types/database'
 
 export default function DebugAuthPage() {
   const { user, profile, loading } = useAuth()
   const [logs, setLogs] = useState<string[]>([])
-  const [manualQuery, setManualQuery] = useState<any>(null)
+  const [manualQuery, setManualQuery] = useState<UserProfile | null>(null)
   const [manualError, setManualError] = useState<any>(null)
   const [timeElapsed, setTimeElapsed] = useState(0)
 
@@ -81,7 +82,7 @@ export default function DebugAuthPage() {
         .from('user_profiles')
         .select('*')
         .eq('id', session.user.id)
-        .single()
+        .single<UserProfile>()
 
       const queryDuration = Date.now() - queryStartTime
 
@@ -90,7 +91,7 @@ export default function DebugAuthPage() {
         addLog(`   Code: ${error.code}`)
         addLog(`   Details: ${JSON.stringify(error.details)}`)
         setManualError(error)
-      } else {
+      } else if (data) {
         addLog(`✅ Query succeeded in ${queryDuration}ms`)
         addLog(`   Profile: ${data.email}, role: ${data.role}`)
         setManualQuery(data)

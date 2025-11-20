@@ -206,10 +206,10 @@ async function createAdminWithPassword() {
       .from('user_profiles')
       .select('id, email, role')
       .eq('id', authData.user.id)
-      .single()
+      .single<{ id: string; email: string; role: string }>()
 
-    if (verifyError) {
-      console.error('❌ Failed to verify:', verifyError.message)
+    if (verifyError || !verifyData) {
+      console.error('❌ Failed to verify:', verifyError?.message || 'No data returned')
       process.exit(1)
     }
 

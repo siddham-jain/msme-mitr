@@ -3,9 +3,7 @@
 import React from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Bot, User } from "lucide-react";
+import { Sparkles, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MessageBubbleProps {
@@ -62,49 +60,50 @@ export const MessageBubble = React.memo(function MessageBubble({ role, content, 
   return (
     <div
       className={cn(
-        "flex gap-3 w-full animate-in fade-in slide-in-from-bottom-2 duration-300",
+        "flex gap-3 animate-slide-in",
         isUser ? "justify-end" : "justify-start"
       )}
     >
+      {/* Assistant avatar with Sparkles icon */}
       {!isUser && (
-        <Avatar className="w-8 h-8 flex-shrink-0 mt-1">
-          <AvatarFallback className="bg-primary text-primary-foreground">
-            <Bot className="w-5 h-5" />
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+            <Sparkles className="w-4 h-4 text-primary" />
+          </div>
+        </div>
       )}
 
-      <div className={cn("flex flex-col max-w-[85%] sm:max-w-[75%]", isUser && "items-end")}>
-        <Card
-          className={cn(
-            "p-3 sm:p-4",
-            isUser
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-muted border-muted",
-            isStreaming && "animate-pulse"
+      {/* Message bubble */}
+      <div
+        className={cn(
+          "max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm",
+          isUser
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted/50 text-foreground border border-border/50",
+          isStreaming && "animate-pulse-subtle"
+        )}
+      >
+        <div className="text-sm leading-relaxed">
+          {isUser ? (
+            <p className="whitespace-pre-wrap m-0">{content}</p>
+          ) : (
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={markdownComponents}
+            >
+              {content}
+            </ReactMarkdown>
           )}
-        >
-          <div className="text-sm leading-relaxed">
-            {isUser ? (
-              <p className="whitespace-pre-wrap m-0">{content}</p>
-            ) : (
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={markdownComponents}
-              >
-                {content}
-              </ReactMarkdown>
-            )}
-          </div>
-        </Card>
+        </div>
       </div>
 
+      {/* User avatar with User icon */}
       {isUser && (
-        <Avatar className="w-8 h-8 flex-shrink-0 mt-1">
-          <AvatarFallback className="bg-secondary text-secondary-foreground">
-            <User className="w-5 h-5" />
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center ring-1 ring-border">
+            <User className="w-4 h-4 text-muted-foreground" />
+          </div>
+        </div>
       )}
     </div>
   );
