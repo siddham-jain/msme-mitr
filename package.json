@@ -14,7 +14,9 @@
     "verify:schemes": "tsx scripts/verify-schemes-migration.ts",
     "create-admin": "tsx scripts/create-admin-user.ts",
     "process-jobs": "tsx scripts/process-extraction-jobs.ts",
-    "process-jobs:watch": "tsx scripts/process-extraction-jobs.ts --watch"
+    "process-jobs:watch": "tsx scripts/process-extraction-jobs.ts --watch",
+    "test:extraction": "tsx scripts/test-extraction-sample.ts",
+    "test:extraction:real": "tsx scripts/test-extraction-service.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.64",
