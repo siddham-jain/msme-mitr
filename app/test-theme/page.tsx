@@ -23,7 +23,7 @@ export default function TestThemePage() {
           <div className="p-4 border rounded-lg bg-card">
             <h2 className="text-xl font-semibold mb-4">Theme Controls</h2>
             <div className="flex gap-4 items-center">
-              <ThemeToggle size="default" />
+              <ThemeToggle />
               <Button onClick={() => setTheme('light')} variant="outline">
                 Set Light
               </Button>

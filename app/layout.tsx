@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/contexts/ThemeContext";
@@ -9,6 +9,25 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+});
+
+// Admin UI Typography System
+// Space Grotesk: Geometric sans with strong personality (alternative to Clash Display)
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  preload: true,
+});
+
+// JetBrains Mono: Monospace font for code and technical elements
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -71,7 +90,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html 
+      lang="en" 
+      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} 
+      suppressHydrationWarning
+    >
       <head>
         {/* PWA Meta Tags */}
         <meta name="mobile-web-app-capable" content="yes" />

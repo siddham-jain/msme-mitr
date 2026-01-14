@@ -419,7 +419,7 @@ export function UserAttributesTable({
 
       {/* User Details Dialog */}
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="sm:max-w-3xl max-w-[calc(100%-2rem)] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>User Attribute Details</DialogTitle>
             <DialogDescription>
@@ -427,106 +427,110 @@ export function UserAttributesTable({
             </DialogDescription>
           </DialogHeader>
           {selectedUser && (
-            <div className="space-y-6">
+            <div className="space-y-8 py-2">
               {/* User Info */}
-              <div>
-                <h3 className="font-semibold mb-3">User Information</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium">{selectedUser.user_email || 'Unknown'}</p>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2">User Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Email</p>
+                    <p className="text-base font-medium break-all">{selectedUser.user_email || 'Unknown'}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">User ID</p>
-                    <p className="font-mono text-xs">{selectedUser.user_id}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">User ID</p>
+                    <p className="font-mono text-sm break-all">{selectedUser.user_id}</p>
                   </div>
                 </div>
               </div>
 
               {/* Business Attributes */}
-              <div>
-                <h3 className="font-semibold mb-3">Business Attributes</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="font-medium">{selectedUser.location || '-'}</p>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2">Business Attributes</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Location / Inquiry</p>
+                    <p className="text-base font-medium">{selectedUser.location || '-'}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Industry</p>
-                    <p className="font-medium">{selectedUser.industry || '-'}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Industry</p>
+                    <p className="text-base font-medium">{selectedUser.industry || '-'}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Business Size</p>
-                    <p className="font-medium">{selectedUser.business_size || '-'}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Business Size</p>
+                    <p className="text-base font-medium">{selectedUser.business_size || '-'}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Annual Turnover</p>
-                    <p className="font-medium">{formatCurrency(selectedUser.annual_turnover)}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Annual Turnover</p>
+                    <p className="text-base font-medium">{formatCurrency(selectedUser.annual_turnover)}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Employee Count</p>
-                    <p className="font-medium">{selectedUser.employee_count || '-'}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Employee Count</p>
+                    <p className="text-base font-medium">{selectedUser.employee_count || '-'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Extraction Metadata */}
-              <div>
-                <h3 className="font-semibold mb-3">Extraction Metadata</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Confidence Score</p>
-                    <Badge variant={getConfidenceColor(selectedUser.extraction_confidence)}>
-                      {selectedUser.extraction_confidence 
-                        ? `${Math.round(selectedUser.extraction_confidence * 100)}%`
-                        : '-'}
-                    </Badge>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2">Extraction Metadata</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Confidence Score</p>
+                    <div className="pt-1">
+                      <Badge variant={getConfidenceColor(selectedUser.extraction_confidence)} className="text-sm px-3 py-1">
+                        {selectedUser.extraction_confidence 
+                          ? `${Math.round(selectedUser.extraction_confidence * 100)}%`
+                          : '-'}
+                      </Badge>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Extraction Method</p>
-                    <p className="font-medium">{selectedUser.extraction_method || '-'}</p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Extraction Method</p>
+                    <p className="text-base font-medium">{selectedUser.extraction_method || '-'}</p>
                   </div>
-                  <div className="col-span-2">
-                    <p className="text-sm text-muted-foreground mb-2">Detected Languages</p>
+                  <div className="col-span-1 md:col-span-2 space-y-2">
+                    <p className="text-sm font-medium text-muted-foreground">Detected Languages</p>
                     {selectedUser.detected_languages && selectedUser.detected_languages.length > 0 ? (
-                      <div className="flex gap-2 flex-wrap">
+                      <div className="flex gap-2 flex-wrap pt-1">
                         {selectedUser.detected_languages.map((lang) => (
-                          <Badge key={lang} variant="secondary" className="flex items-center gap-1">
-                            <Languages className="h-3 w-3" />
+                          <Badge key={lang} variant="secondary" className="flex items-center gap-1.5 text-sm px-3 py-1">
+                            <Languages className="h-3.5 w-3.5" />
                             {lang}
                           </Badge>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-muted-foreground">No languages detected</p>
+                      <p className="text-base text-muted-foreground">No languages detected</p>
                     )}
                   </div>
                   {selectedUser.extraction_notes && (
-                    <div className="col-span-2">
-                      <p className="text-sm text-muted-foreground mb-2">Extraction Notes</p>
-                      <p className="text-sm bg-muted p-3 rounded-md">
-                        {selectedUser.extraction_notes}
-                      </p>
+                    <div className="col-span-1 md:col-span-2 space-y-2">
+                      <p className="text-sm font-medium text-muted-foreground">Extraction Notes</p>
+                      <div className="bg-muted p-4 rounded-lg">
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {selectedUser.extraction_notes}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Timestamps */}
-              <div>
-                <h3 className="font-semibold mb-3">Timestamps</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Created At</p>
-                    <p className="text-sm">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold border-b pb-2">Timestamps</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Created At</p>
+                    <p className="text-base">
                       {selectedUser.created_at 
                         ? new Date(selectedUser.created_at).toLocaleString()
                         : '-'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Updated At</p>
-                    <p className="text-sm">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-medium text-muted-foreground">Updated At</p>
+                    <p className="text-base">
                       {selectedUser.updated_at 
                         ? new Date(selectedUser.updated_at).toLocaleString()
                         : '-'}

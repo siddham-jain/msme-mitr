@@ -12,6 +12,10 @@
   --font-sans: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
+  /* Admin UI Typography System */
+  --font-display: var(--font-display); /* Space Grotesk - for headings and display text */
+  --font-admin-mono: var(--font-mono); /* JetBrains Mono - for monospace elements */
+
   /* Mobile-Optimized Font Sizes - Updated for compact design */
   --font-size-xs: 0.75rem; /* 12px */
   --font-size-sm: 0.875rem; /* 14px */
@@ -20,6 +24,16 @@
   --font-size-xl: 1.25rem; /* 20px */
   --font-size-2xl: 1.5rem; /* 24px */
   --font-size-3xl: 2.25rem; /* 36px */
+
+  /* Admin UI Typography Scale */
+  --font-size-display-hero: 4.5rem; /* 72px */
+  --font-size-display-h1: 3rem; /* 48px */
+  --font-size-display-h2: 2.25rem; /* 36px */
+  --font-size-display-h3: 1.875rem; /* 30px */
+  --font-size-body-lg: 1.125rem; /* 18px */
+  --font-size-body-base: 1rem; /* 16px */
+  --font-size-body-sm: 0.875rem; /* 14px */
+  --font-size-body-xs: 0.75rem; /* 12px */
 
   /* Touch-Friendly Spacing - Updated for compact design */
   --spacing-touch: 3rem; /* 48px - Minimum touch target */
@@ -131,6 +145,37 @@
   --sidebar-accent-foreground: oklch(0.15 0.01 0);
   --sidebar-border: oklch(0.88 0.01 60);
   --sidebar-ring: oklch(0.65 0.18 45);
+
+  /* Admin UI Color System - Terminal Green (Light Theme) */
+  /* Background layers */
+  --admin-bg-primary: #F0F4F0;
+  --admin-bg-secondary: #E8EDE8;
+  --admin-bg-elevated: #FFFFFF;
+  
+  /* Foreground colors */
+  --admin-fg-primary: #0A2F0A;
+  --admin-fg-secondary: #1A4D1A;
+  --admin-fg-muted: #4A6A4A;
+  
+  /* Accent colors - Terminal Green aesthetic */
+  --admin-accent-primary: #00FF41;
+  --admin-accent-secondary: #00CC33;
+  --admin-accent-tertiary: #FFD700;
+  
+  /* Semantic colors */
+  --admin-success: #00FF41;
+  --admin-warning: #FFD700;
+  --admin-error: #FF3366;
+  --admin-info: #00CCFF;
+  
+  /* Animation timings */
+  --admin-anim-fast: 200ms;
+  --admin-anim-base: 400ms;
+  --admin-anim-slow: 600ms;
+  
+  /* Animation easing */
+  --admin-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --admin-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .dark {
@@ -189,6 +234,28 @@
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(1 0 0 / 8%);
   --sidebar-ring: oklch(0.7 0.20 50);
+
+  /* Admin UI Color System - Midnight Brutalist (Dark Theme) */
+  /* Background layers */
+  --admin-bg-primary: #0A0A0F;
+  --admin-bg-secondary: #12121A;
+  --admin-bg-elevated: #1A1A25;
+  
+  /* Foreground colors */
+  --admin-fg-primary: #FFFFFF;
+  --admin-fg-secondary: #E0E0E8;
+  --admin-fg-muted: #8888A0;
+  
+  /* Accent colors - Midnight Brutalist aesthetic */
+  --admin-accent-primary: #FF00FF;
+  --admin-accent-secondary: #00FFFF;
+  --admin-accent-tertiary: #FFFF00;
+  
+  /* Semantic colors */
+  --admin-success: #00FF88;
+  --admin-warning: #FFAA00;
+  --admin-error: #FF0055;
+  --admin-info: #00AAFF;
 }
 
 @layer base {
@@ -225,6 +292,23 @@
     textarea {
       min-height: 48px; /* Minimum touch target size */
       min-width: 48px;
+    }
+
+    /* Responsive admin typography for mobile */
+    .admin-display-hero {
+      font-size: 2.5rem; /* 40px - scaled down for mobile */
+    }
+
+    .admin-display-h1 {
+      font-size: 2rem; /* 32px - scaled down for mobile */
+    }
+
+    .admin-display-h2 {
+      font-size: 1.75rem; /* 28px - scaled down for mobile */
+    }
+
+    .admin-display-h3 {
+      font-size: 1.5rem; /* 24px - scaled down for mobile */
     }
   }
 
@@ -265,6 +349,67 @@
 
   p {
     @apply mb-4;
+  }
+
+  /* Admin UI Typography Classes */
+  .admin-display-hero {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-hero);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .admin-display-h1 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-h1);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .admin-display-h2 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-h2);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .admin-display-h3 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display-h3);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .admin-body-lg {
+    font-family: var(--font-admin-mono);
+    font-size: var(--font-size-body-lg);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .admin-body-base {
+    font-family: var(--font-admin-mono);
+    font-size: var(--font-size-body-base);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .admin-body-sm {
+    font-family: var(--font-admin-mono);
+    font-size: var(--font-size-body-sm);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .admin-body-xs {
+    font-family: var(--font-admin-mono);
+    font-size: var(--font-size-body-xs);
+    font-weight: 400;
+    line-height: 1.5;
   }
 
   /* Mobile-friendly spacing */
@@ -418,5 +563,510 @@
 
   .chat-scrollbar::-webkit-scrollbar-thumb:hover {
     background: var(--foreground);
+  }
+
+  /* Admin UI Color Utilities */
+  .admin-bg-primary {
+    background-color: var(--admin-bg-primary);
+  }
+
+  .admin-bg-secondary {
+    background-color: var(--admin-bg-secondary);
+  }
+
+  .admin-bg-elevated {
+    background-color: var(--admin-bg-elevated);
+  }
+
+  .admin-text-primary {
+    color: var(--admin-fg-primary);
+  }
+
+  .admin-text-secondary {
+    color: var(--admin-fg-secondary);
+  }
+
+  .admin-text-muted {
+    color: var(--admin-fg-muted);
+  }
+
+  .admin-accent-primary {
+    color: var(--admin-accent-primary);
+  }
+
+  .admin-accent-secondary {
+    color: var(--admin-accent-secondary);
+  }
+
+  .admin-accent-tertiary {
+    color: var(--admin-accent-tertiary);
+  }
+
+  .admin-bg-accent-primary {
+    background-color: var(--admin-accent-primary);
+  }
+
+  .admin-bg-accent-secondary {
+    background-color: var(--admin-accent-secondary);
+  }
+
+  .admin-bg-accent-tertiary {
+    background-color: var(--admin-accent-tertiary);
+  }
+
+  .admin-border-accent {
+    border-color: var(--admin-accent-primary);
+  }
+
+  /* Admin semantic color utilities */
+  .admin-success {
+    color: var(--admin-success);
+  }
+
+  .admin-warning {
+    color: var(--admin-warning);
+  }
+
+  .admin-error {
+    color: var(--admin-error);
+  }
+
+  .admin-info {
+    color: var(--admin-info);
+  }
+
+  .admin-bg-success {
+    background-color: var(--admin-success);
+  }
+
+  .admin-bg-warning {
+    background-color: var(--admin-warning);
+  }
+
+  .admin-bg-error {
+    background-color: var(--admin-error);
+  }
+
+  .admin-bg-info {
+    background-color: var(--admin-info);
+  }
+
+  /* Admin transition utilities */
+  .admin-transition {
+    transition-duration: var(--admin-anim-base);
+    transition-timing-function: var(--admin-ease-smooth);
+  }
+
+  .admin-transition-fast {
+    transition-duration: var(--admin-anim-fast);
+    transition-timing-function: var(--admin-ease-smooth);
+  }
+
+  .admin-transition-slow {
+    transition-duration: var(--admin-anim-slow);
+    transition-timing-function: var(--admin-ease-smooth);
+  }
+
+  .admin-transition-colors {
+    transition-property: background-color, color, border-color;
+    transition-duration: var(--admin-anim-base);
+    transition-timing-function: var(--admin-ease-smooth);
+  }
+
+  /* ============================================
+     ATMOSPHERIC BACKGROUND SYSTEM
+     ============================================ */
+
+  /* Light Theme: Terminal Green - Dot Grid Pattern */
+  .admin-bg-atmospheric-light {
+    position: relative;
+    background-color: var(--admin-bg-primary);
+  }
+
+  .admin-bg-atmospheric-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(0, 255, 65, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .admin-bg-atmospheric-light::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 30% 20%, 
+      rgba(0, 255, 65, 0.08), 
+      transparent 50%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Dark Theme: Midnight Brutalist - Grid Lines Pattern */
+  .admin-bg-atmospheric-dark {
+    position: relative;
+    background-color: var(--admin-bg-primary);
+  }
+
+  .admin-bg-atmospheric-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .admin-bg-atmospheric-dark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      conic-gradient(
+        from 45deg at 70% 30%, 
+        rgba(255, 0, 255, 0.1), 
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 80% 20%, 
+        rgba(0, 255, 255, 0.15), 
+        transparent 40%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Automatic theme-aware atmospheric background */
+  .admin-bg-atmospheric {
+    position: relative;
+    background-color: var(--admin-bg-primary);
+  }
+
+  /* Light theme dot-grid pattern */
+  .admin-bg-atmospheric::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(0, 255, 65, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Light theme radial gradient */
+  .admin-bg-atmospheric::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 30% 20%, 
+      rgba(0, 255, 65, 0.08), 
+      transparent 50%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Dark theme overrides */
+  .dark .admin-bg-atmospheric::before {
+    background-image: 
+      linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .dark .admin-bg-atmospheric::after {
+    background: 
+      conic-gradient(
+        from 45deg at 70% 30%, 
+        rgba(255, 0, 255, 0.1), 
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at 80% 20%, 
+        rgba(0, 255, 255, 0.15), 
+        transparent 40%
+      );
+  }
+
+  /* Content wrapper to ensure content appears above background layers */
+  .admin-bg-atmospheric > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Elevated card backgrounds with subtle atmospheric effects */
+  .admin-card-atmospheric {
+    position: relative;
+    background-color: var(--admin-bg-elevated);
+    border: 1px solid rgba(0, 255, 65, 0.1);
+    overflow: hidden;
+  }
+
+  .admin-card-atmospheric::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 0%, 
+      rgba(0, 255, 65, 0.03), 
+      transparent 60%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dark .admin-card-atmospheric {
+    border-color: rgba(255, 0, 255, 0.15);
+  }
+
+  .dark .admin-card-atmospheric::before {
+    background: radial-gradient(
+      circle at 50% 0%, 
+      rgba(255, 0, 255, 0.05), 
+      transparent 60%
+    );
+  }
+
+  .admin-card-atmospheric > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Subtle noise texture overlay (optional enhancement) */
+  .admin-bg-noise {
+    position: relative;
+  }
+
+  .admin-bg-noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+  }
+
+  /* Glow effect utilities for accent elements */
+  .admin-glow-primary {
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+  }
+
+  .dark .admin-glow-primary {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+  }
+
+  .admin-glow-secondary {
+    box-shadow: 0 0 15px rgba(0, 204, 51, 0.25);
+  }
+
+  .dark .admin-glow-secondary {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.35);
+  }
+
+  /* Animated gradient border effect */
+  .admin-gradient-border {
+    position: relative;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .admin-gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+      135deg,
+      var(--admin-accent-primary),
+      var(--admin-accent-secondary),
+      var(--admin-accent-tertiary)
+    );
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ============================================
+     MICRO-INTERACTION ANIMATIONS
+     ============================================ */
+
+  /* Scale Glow - for buttons (uses CSS variables for theme-aware colors) */
+  @keyframes scale-glow {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 var(--admin-accent-primary);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px color-mix(in srgb, var(--admin-accent-primary) 30%, transparent);
+    }
+    100% {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px color-mix(in srgb, var(--admin-accent-primary) 40%, transparent);
+    }
+  }
+
+  /* Lift Shadow - for cards */
+  @keyframes lift-shadow {
+    0% {
+      transform: translateY(0);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    100% {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* Underline Sweep - for links */
+  @keyframes underline-sweep {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  /* Flip Rotate - for theme toggle */
+  @keyframes flip-rotate {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(180deg);
+    }
+  }
+
+  /* Animation classes */
+  .animate-scale-glow {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .animate-scale-glow:hover {
+    animation: scale-glow 0.2s ease forwards;
+  }
+
+  .animate-lift-shadow {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .animate-lift-shadow:hover {
+    animation: lift-shadow 0.3s ease forwards;
+  }
+
+  .animate-underline-sweep {
+    position: relative;
+  }
+
+  .animate-underline-sweep::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--admin-accent-primary);
+    transition: width 0.3s ease;
+  }
+
+  .animate-underline-sweep:hover::after {
+    animation: underline-sweep 0.3s ease forwards;
+  }
+
+  .animate-flip-rotate {
+    transition: transform 0.4s ease;
+    transform-style: preserve-3d;
+  }
+
+  .animate-flip-rotate:active {
+    animation: flip-rotate 0.4s ease forwards;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-scale-glow,
+    .animate-lift-shadow,
+    .animate-underline-sweep,
+    .animate-flip-rotate {
+      animation: none !important;
+      transition: none !important;
+    }
+    
+    .animate-scale-glow:hover,
+    .animate-lift-shadow:hover {
+      transform: none !important;
+    }
+    
+    .animate-underline-sweep::after {
+      transition: none !important;
+    }
+  }
+
+  /* Layered background with multiple effects */
+  .admin-bg-layered {
+    position: relative;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.05), transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.04), transparent 40%),
+      var(--admin-bg-primary);
+  }
+
+  .dark .admin-bg-layered {
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 0, 255, 0.08), transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.06), transparent 40%),
+      var(--admin-bg-primary);
+  }
+
+  /* Hero section with dramatic atmospheric effect */
+  .admin-bg-hero {
+    position: relative;
+    background: var(--admin-bg-primary);
+    overflow: hidden;
+  }
+
+  .admin-bg-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(
+        ellipse at 50% 0%, 
+        rgba(0, 255, 65, 0.15), 
+        transparent 70%
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dark .admin-bg-hero::before {
+    background: 
+      radial-gradient(
+        ellipse at 50% 0%, 
+        rgba(255, 0, 255, 0.2), 
+        transparent 70%
+      );
+  }
+
+  .admin-bg-hero > * {
+    position: relative;
+    z-index: 1;
   }
 }
