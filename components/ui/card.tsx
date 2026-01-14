@@ -36,6 +36,46 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Interactive Card Component with Hover Effects
+ * 
+ * Extends the base Card with interactive hover states:
+ * - Hover border brightening to 15% opacity
+ * - Hover scale (1.02) transform
+ * - 300ms ease-out transitions
+ * 
+ * Requirements: 4.5, 4.6, 4.7
+ */
+function InteractiveCard({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="interactive-card"
+      className={cn(
+        // Glass effect base - Requirements 4.1, 4.2
+        "bg-[rgba(26,26,36,0.6)] backdrop-blur-[8px]",
+        // Border at 8% white opacity - Requirement 4.3
+        "border border-[rgba(255,255,255,0.08)]",
+        // Rounded-lg (12px) border radius - Requirement 4.4
+        "rounded-lg",
+        // Text and layout
+        "text-[var(--card-foreground,#FAFAFA)]",
+        "flex flex-col gap-6 py-6",
+        // Interactive cursor
+        "cursor-pointer",
+        // 300ms ease-out transitions - Requirement 4.7
+        "transition-all duration-300 ease-out",
+        // Hover effects - Requirements 4.5, 4.6
+        "hover:border-[rgba(255,255,255,0.15)]",
+        "hover:bg-[rgba(26,26,36,0.8)]",
+        "hover:scale-[1.02]",
+        "hover:shadow-[0_10px_15px_rgba(0,0,0,0.3)]",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -104,6 +144,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Card,
+  InteractiveCard,
   CardHeader,
   CardFooter,
   CardTitle,
