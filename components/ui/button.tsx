@@ -9,36 +9,47 @@ const buttonVariants = cva(
   // h-11 (44px) default height for touch-friendly targets
   // rounded-lg (12px) border radius
   // 200ms ease-out transitions for all state changes
+  // Active scale (0.98) for tactile feedback - Requirement 3.4
+  // Focus-visible ring with accent color - Requirement 3.6
   `inline-flex items-center justify-center gap-2 whitespace-nowrap 
    font-medium transition-all duration-200 ease-out outline-none
    disabled:pointer-events-none disabled:opacity-50
    [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 
-   shrink-0 [&_svg]:shrink-0`,
+   shrink-0 [&_svg]:shrink-0
+   active:scale-[0.98]
+   focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 
+   focus-visible:ring-offset-[var(--background)]`,
   {
     variants: {
       variant: {
         // Primary - White button on dark background (Minimalist Dark design)
-        // Requirements: 3.5
+        // Hover brightness and glow effect - Requirement 3.3
+        // Requirements: 3.3, 3.5
         default: `bg-[var(--primary)] text-[var(--primary-foreground)] 
-                  shadow-[var(--shadow-sm)]`,
+                  shadow-[var(--shadow-sm)]
+                  hover:brightness-90 hover:shadow-[0_0_20px_rgba(250,250,250,0.1)]`,
         
         // Secondary - Elevated dark surface
         // Requirements: 3.5
         secondary: `bg-[var(--secondary)] text-[var(--secondary-foreground)]
-                    border border-[var(--border)]`,
+                    border border-[var(--border)]
+                    hover:bg-[var(--muted)] hover:border-[var(--border-hover)]`,
         
         // Outline - Transparent with border
         // Requirements: 3.5
         outline: `bg-transparent text-[var(--foreground)]
-                  border border-[var(--border)]`,
+                  border border-[var(--border)]
+                  hover:bg-white/5 hover:border-[var(--border-hover)]`,
         
         // Ghost - No background until hover
         // Requirements: 3.5
-        ghost: `bg-transparent text-[var(--foreground)]`,
+        ghost: `bg-transparent text-[var(--foreground)]
+                hover:bg-white/5`,
         
         // Destructive
         // Requirements: 3.5
-        destructive: `bg-[var(--destructive)] text-[var(--destructive-foreground)]`,
+        destructive: `bg-[var(--destructive)] text-[var(--destructive-foreground)]
+                      hover:brightness-110`,
         
         // Link style
         link: `text-[var(--foreground)] underline-offset-4 hover:underline`,
