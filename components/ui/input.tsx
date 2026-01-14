@@ -17,6 +17,12 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         // Text colors - placeholder in muted foreground
         "text-[var(--foreground)]",
         "placeholder:text-[var(--muted-foreground)]",
+        // Transitions - 200ms for focus state changes
+        "transition-all duration-200 ease-out",
+        // Focus state - subtle glow effect and brightened border
+        "focus:border-[var(--ring)]/50",
+        "focus:ring-2 focus:ring-[var(--ring-muted)]",
+        "focus:outline-none",
         // Selection styling
         "selection:bg-primary selection:text-primary-foreground",
         // File input styling
