@@ -2,12 +2,33 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Card Component with Glass Effect
+ * 
+ * Implements the Minimalist Dark design system glass card styling:
+ * - Semi-transparent background rgba(26, 26, 36, 0.6)
+ * - Backdrop blur of 8px
+ * - Subtle border at 8% white opacity
+ * - Rounded-lg (12px) border radius
+ * 
+ * Requirements: 4.1, 4.2, 4.3, 4.4
+ */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+        // Glass effect base - Requirements 4.1, 4.2
+        "bg-[rgba(26,26,36,0.6)] backdrop-blur-[8px]",
+        // Border at 8% white opacity - Requirement 4.3
+        "border border-[rgba(255,255,255,0.08)]",
+        // Rounded-lg (12px) border radius - Requirement 4.4
+        "rounded-lg",
+        // Text and layout
+        "text-[var(--card-foreground,#FAFAFA)]",
+        "flex flex-col gap-6 py-6",
+        // Base transition for smooth state changes
+        "transition-all duration-300 ease-out",
         className
       )}
       {...props}
