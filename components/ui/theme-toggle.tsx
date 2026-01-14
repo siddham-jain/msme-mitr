@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Moon, Sun } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Moon } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 
@@ -12,19 +12,17 @@ interface ThemeToggleProps {
   position?: 'nav' | 'standalone';
 }
 
+/**
+ * ThemeToggle - Currently displays dark theme indicator
+ * 
+ * In the Minimalist Dark design, this component shows the current theme
+ * without toggle functionality. The component structure is preserved
+ * for future light mode support.
+ * 
+ * Requirements: 14.1, 14.2
+ */
 export function ThemeToggle({ size = 'md', className, position = 'standalone' }: ThemeToggleProps) {
-  const { theme, setTheme } = useTheme();
-  const [isFlipping, setIsFlipping] = React.useState(false);
-
-  const toggleTheme = () => {
-    if (isFlipping) return; // Prevent multiple clicks during animation
-    
-    setIsFlipping(true);
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-    
-    // Reset flip state after animation completes
-    setTimeout(() => setIsFlipping(false), 400);
-  };
+  const { theme } = useTheme();
 
   // Size mappings
   const sizeClasses = {
@@ -40,94 +38,46 @@ export function ThemeToggle({ size = 'md', className, position = 'standalone' }:
   };
 
   return (
-    <motion.button
-      onClick={toggleTheme}
-      disabled={isFlipping}
+    <motion.div
       className={cn(
         'relative rounded-full flex items-center justify-center',
         'transition-all duration-300 ease-out',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        'disabled:cursor-not-allowed',
-        // Background with smooth color transitions
-        'admin-transition-colors',
-        theme === 'dark' 
-          ? 'bg-admin-bg-elevated hover:bg-admin-bg-secondary' 
-          : 'bg-admin-bg-elevated hover:bg-admin-bg-secondary',
-        // Border with theme-specific colors
-        theme === 'dark'
-          ? 'border-2 border-admin-accent-primary/20 hover:border-admin-accent-primary/40'
-          : 'border-2 border-admin-accent-primary/20 hover:border-admin-accent-primary/40',
-        // Glow effect matching current theme
-        theme === 'dark'
-          ? 'shadow-[0_0_15px_rgba(255,0,255,0.2)] hover:shadow-[0_0_25px_rgba(255,0,255,0.4)]'
-          : 'shadow-[0_0_15px_rgba(0,255,65,0.2)] hover:shadow-[0_0_25px_rgba(0,255,65,0.4)]',
-        // Focus ring
-        theme === 'dark'
-          ? 'focus-visible:ring-admin-accent-primary'
-          : 'focus-visible:ring-admin-accent-primary',
+        // Glass effect background matching dark theme
+        'bg-[var(--card)] backdrop-blur-[8px]',
+        'border border-[var(--border)]',
         sizeClasses[size],
         className
       )}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      aria-pressed={theme === 'dark'}
-      role="switch"
+      aria-label="Dark theme active"
+      role="status"
       whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      animate={{
-        rotateY: isFlipping ? 180 : 0,
-      }}
-      transition={{
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1],
-      }}
-      style={{
-        transformStyle: 'preserve-3d',
-      }}
     >
-      {/* Icon container with fade transition */}
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={theme}
-          initial={{ opacity: 0, rotateY: -90 }}
-          animate={{ opacity: 1, rotateY: 0 }}
-          exit={{ opacity: 0, rotateY: 90 }}
-          transition={{ duration: 0.2 }}
-          className={cn(
-            'flex items-center justify-center',
-            theme === 'dark' ? 'text-admin-accent-primary' : 'text-admin-accent-primary'
-          )}
-        >
-          {theme === 'dark' ? (
-            <Sun className={iconSizes[size]} aria-hidden="true" />
-          ) : (
-            <Moon className={iconSizes[size]} aria-hidden="true" />
-          )}
-        </motion.div>
-      </AnimatePresence>
+      {/* Moon icon indicating dark theme */}
+      <motion.div
+        className="flex items-center justify-center text-[var(--muted-foreground)]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Moon className={iconSizes[size]} aria-hidden="true" />
+      </motion.div>
 
       {/* Screen reader text */}
-      <span className="sr-only">
-        {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      </span>
+      <span className="sr-only">Dark theme is active</span>
 
-      {/* Animated glow pulse effect */}
+      {/* Subtle ambient glow */}
       <motion.div
-        className={cn(
-          'absolute inset-0 rounded-full pointer-events-none',
-          theme === 'dark'
-            ? 'bg-admin-accent-primary/10'
-            : 'bg-admin-accent-primary/10'
-        )}
+        className="absolute inset-0 rounded-full pointer-events-none bg-[var(--accent)]/5"
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
+          scale: [1, 1.1, 1],
+          opacity: [0.2, 0.4, 0.2],
         }}
         transition={{
-          duration: 2,
+          duration: 3,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
       />
-    </motion.button>
+    </motion.div>
   );
 }

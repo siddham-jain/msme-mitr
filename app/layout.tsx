@@ -76,7 +76,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FF6B35",
+  themeColor: "#0A0A0F", // Dark theme background color
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -92,7 +92,7 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} 
+      className={`dark ${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} 
       suppressHydrationWarning
     >
       <head>
@@ -107,25 +107,22 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
         {/* Theme initialization script - runs before React hydration */}
+        {/* Requirement 14.5: Initialize theme before hydration to prevent flash */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('theme');
-                  if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                  } else {
-                    // Check system preference
-                    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    if (prefersDark) {
-                      document.documentElement.classList.add('dark');
-                    }
-                  }
+                  // Always apply dark theme (Minimalist Dark design)
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.style.colorScheme = 'dark';
+                  // Store preference for future light mode support
+                  localStorage.setItem('theme', 'dark');
                 } catch (e) {
+                  // Gracefully handle localStorage unavailability (Requirement 14.6)
+                  // Dark class will still be applied via CSS
                   console.warn('Failed to initialize theme:', e);
+                  document.documentElement.classList.add('dark');
                 }
               })();
             `,

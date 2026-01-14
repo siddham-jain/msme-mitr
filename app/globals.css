@@ -178,6 +178,160 @@
   --admin-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+/* ============================================
+   MINIMALIST DARK DESIGN SYSTEM TOKENS
+   ============================================ */
+
+/* Dark theme is the default for Minimalist Dark design */
+/* These tokens define the atmospheric depth and premium feel */
+
+:root.minimalist-dark,
+.minimalist-dark {
+  /* ----------------------------------------
+     1.1 Layered Slate Color Palette
+     Requirements: 1.1, 1.2
+     ---------------------------------------- */
+  
+  /* Background layers - The foundation of atmospheric depth */
+  --background: #0A0A0F;           /* Deepest layer - page background */
+  --background-alt: #12121A;       /* Elevated surfaces - sidebar, modals */
+  --muted: #1A1A24;                /* Card backgrounds, elevated elements */
+  --muted-foreground: #71717A;     /* Secondary text, placeholders */
+  
+  /* Foreground Colors */
+  --foreground: #FAFAFA;           /* Primary text - near white */
+  --card: rgba(26, 26, 36, 0.6);   /* Semi-transparent card background */
+  --card-solid: #1A1A24;           /* Solid card background */
+  --card-foreground: #FAFAFA;
+  
+  /* Popover/Dropdown */
+  --popover: #12121A;
+  --popover-foreground: #FAFAFA;
+  
+  /* ----------------------------------------
+     1.2 Accent and Interactive State Tokens
+     Requirements: 1.1
+     ---------------------------------------- */
+  
+  /* Accent - Minimal amber, used sparingly */
+  --accent: #F59E0B;               /* Amber-500 - focus rings, highlights */
+  --accent-muted: rgba(245, 158, 11, 0.15);
+  --accent-foreground: #0A0A0F;
+  
+  /* Interactive States */
+  --primary: #FAFAFA;              /* Primary buttons - white on dark */
+  --primary-foreground: #0A0A0F;
+  --secondary: #1A1A24;
+  --secondary-foreground: #FAFAFA;
+  
+  /* Destructive */
+  --destructive: #EF4444;
+  --destructive-foreground: #FAFAFA;
+  
+  /* ----------------------------------------
+     1.3 Border and Input Tokens
+     Requirements: 1.3
+     ---------------------------------------- */
+  
+  /* Borders - Very subtle */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --border-accent: rgba(245, 158, 11, 0.3);
+  
+  /* Input specific */
+  --input: rgba(26, 26, 36, 0.6);
+  --input-border: rgba(255, 255, 255, 0.08);
+  
+  /* Ring for focus states */
+  --ring: #F59E0B;
+  --ring-muted: rgba(245, 158, 11, 0.2);
+  
+  /* ----------------------------------------
+     1.4 Shadow and Glow Effect Tokens
+     Requirements: 1.4
+     ---------------------------------------- */
+  
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+  
+  /* Ambient Glows - The signature atmospheric effect */
+  --glow-sm: 0 0 20px rgba(245, 158, 11, 0.15);
+  --glow-md: 0 0 40px rgba(245, 158, 11, 0.2);
+  --glow-lg: 0 0 60px rgba(245, 158, 11, 0.25);
+  
+  /* Border Glow for highlighted elements */
+  --border-glow: 0 0 0 1px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.15);
+  
+  /* Card hover shadow */
+  --card-hover-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+  
+  /* ----------------------------------------
+     1.5 Radius and Transition Tokens
+     Requirements: 1.5, 1.6
+     ---------------------------------------- */
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px - default */
+  --radius-lg: 0.75rem;    /* 12px - cards, buttons */
+  --radius-xl: 1rem;       /* 16px - large cards */
+  --radius-2xl: 1.5rem;    /* 24px - hero elements */
+  --radius-full: 9999px;   /* Pills, avatars */
+  
+  /* Transition Timings */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+  
+  /* Easing */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ----------------------------------------
+     2.1 Typography System
+     Requirements: 2.1, 2.2, 2.3, 2.5
+     ---------------------------------------- */
+  
+  /* Font Families */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;  /* Display/Headlines - Req 2.1 */
+  --font-body: 'Inter', system-ui, sans-serif;             /* Body text - Req 2.2 */
+  --font-mono: 'JetBrains Mono', monospace;                /* Code/Technical - Req 2.3 */
+  
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;  /* Headlines - Req 2.5 */
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  
+  /* ----------------------------------------
+     2.2 Type Scale
+     Requirements: 2.4
+     ---------------------------------------- */
+  
+  /* Type Scale - xs (12px) to 7xl (96px) */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+  --text-6xl: 3.75rem;     /* 60px */
+  --text-7xl: 4.5rem;      /* 72px */
+  --text-8xl: 6rem;        /* 96px */
+  
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+}
+
 .dark {
   /* Enhanced Dark Mode - AMOLED friendly with vibrant accents */
   --background: oklch(0.08 0 0); /* Pure black for AMOLED */
@@ -412,6 +566,152 @@
     line-height: 1.5;
   }
 
+  /* ============================================
+     MINIMALIST DARK TYPOGRAPHY SYSTEM
+     Requirements: 2.1, 2.2, 2.3, 2.4, 2.5
+     ============================================ */
+
+  /* Display/Headline Typography - Space Grotesk with tracking-tight */
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Tracking utilities */
+  .tracking-tight {
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .tracking-normal {
+    letter-spacing: var(--tracking-normal);
+  }
+
+  .tracking-wide {
+    letter-spacing: var(--tracking-wide);
+  }
+
+  /* Headline classes with Space Grotesk and tracking-tight */
+  .headline-7xl {
+    font-family: var(--font-display);
+    font-size: var(--text-8xl);
+    line-height: var(--leading-none);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 700;
+  }
+
+  .headline-6xl {
+    font-family: var(--font-display);
+    font-size: var(--text-7xl);
+    line-height: var(--leading-none);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 700;
+  }
+
+  .headline-5xl {
+    font-family: var(--font-display);
+    font-size: var(--text-6xl);
+    line-height: var(--leading-none);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 700;
+  }
+
+  .headline-4xl {
+    font-family: var(--font-display);
+    font-size: var(--text-5xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 700;
+  }
+
+  .headline-3xl {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+  }
+
+  .headline-2xl {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+  }
+
+  .headline-xl {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 600;
+  }
+
+  .headline-lg {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-tight);
+    font-weight: 500;
+  }
+
+  /* Body text classes - Inter */
+  .body-lg {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .body-base {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+  }
+
+  .body-sm {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .body-xs {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+  }
+
+  /* Code/Technical text classes - JetBrains Mono */
+  .code-lg {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .code-base {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+  }
+
+  .code-sm {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .code-xs {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+  }
+
   /* Mobile-friendly spacing */
   .container {
     @apply px-4 mx-auto;
@@ -460,6 +760,67 @@
 }
 
 @layer utilities {
+  /* ============================================
+     MINIMALIST DARK TYPE SCALE UTILITIES
+     Requirements: 2.4
+     ============================================ */
+
+  /* Text size utilities - xs (12px) to 7xl (96px) */
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+  }
+
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .text-base {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+  }
+
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+  }
+
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--leading-relaxed);
+  }
+
+  .text-2xl {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-snug);
+  }
+
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--leading-snug);
+  }
+
+  .text-4xl {
+    font-size: var(--text-4xl);
+    line-height: var(--leading-tight);
+  }
+
+  .text-5xl {
+    font-size: var(--text-5xl);
+    line-height: var(--leading-tight);
+  }
+
+  .text-6xl {
+    font-size: var(--text-6xl);
+    line-height: var(--leading-none);
+  }
+
+  .text-7xl {
+    font-size: var(--text-7xl);
+    line-height: var(--leading-none);
+  }
+
   /* Safe area padding for notches */
   .safe-top {
     padding-top: env(safe-area-inset-top);
