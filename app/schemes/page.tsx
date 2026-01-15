@@ -95,9 +95,9 @@ export default function SchemesPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden bg-[var(--background)]">
       {/* Top App Bar */}
-      <header className="app-bar flex items-center justify-between px-4 py-3 shadow-sm border-b">
+      <header className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] bg-[var(--background-alt)]">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -109,8 +109,8 @@ export default function SchemesPage() {
             <Menu className="w-6 h-6" />
           </Button>
           <div className="flex items-center gap-2">
-            <Bot className="w-6 h-6 text-primary" />
-            <h1 className="text-lg font-bold text-primary">MSME Mitr AI</h1>
+            <Bot className="w-6 h-6 text-[var(--foreground)]" />
+            <h1 className="text-lg font-bold text-[var(--foreground)]">MSME Mitr AI</h1>
           </div>
         </div>
 
@@ -169,8 +169,8 @@ export default function SchemesPage() {
         )}
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 py-6">
+        <main className="flex-1 overflow-y-auto bg-[var(--background)]">
+        <div className="container mx-auto px-4 py-24 md:py-32">
           {/* AI Assistant Prompt */}
           <Card className="bg-primary/5 border-primary/20 p-4 mb-4">
             <div className="flex items-center gap-3">
