@@ -97,27 +97,27 @@ export function StatCards({ summary, loading = false }: StatCardsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat) => {
         const Icon = stat.icon
         
         return (
-          <Card key={stat.title} className="border-none shadow-sm">
-            <CardContent className="p-5">
+          <Card key={stat.title} className="bg-[var(--card)] backdrop-blur-[8px] border-[var(--border)]">
+            <CardContent className="p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
+                <div className="space-y-2">
+                  <p className="text-sm text-[var(--muted-foreground)]">
                     {stat.title}
                   </p>
-                  <p className="text-3xl font-semibold">
+                  <p className="font-display text-3xl font-semibold text-[var(--foreground)]">
                     {formatNumber(stat.value)}
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-[var(--muted-foreground)]">
                     {stat.description}
                   </p>
                 </div>
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Icon className="h-5 w-5 text-primary" />
+                <div className="p-3 bg-[var(--accent)]/10 rounded-lg">
+                  <Icon className="h-5 w-5 text-[var(--accent)]" />
                 </div>
               </div>
             </CardContent>
