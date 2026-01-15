@@ -245,34 +245,34 @@ export function ChatSidebar({
                   group relative rounded-lg transition-all duration-200 cursor-pointer
                   ${
                     currentChatId === conv.id
-                      ? "border-l-2 border-primary bg-muted/30"
-                      : "hover:bg-muted/30"
+                      ? "border-l-2 border-[var(--accent)] bg-[var(--card)] backdrop-blur-[8px]"
+                      : "hover:bg-[var(--card)] hover:backdrop-blur-[8px] hover:border hover:border-[var(--border-hover)]"
                   }
                 `}
                 onClick={() => onSelectChat?.(conv.id)}
               >
                 <div className="flex items-start gap-2.5 p-2">
                   {conv.is_pinned ? (
-                    <Pin className="w-4 h-4 flex-shrink-0 mt-0.5 text-primary fill-current" />
+                    <Pin className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--accent)] fill-current" />
                   ) : (
                     <MessageSquare
                       className={`w-4 h-4 flex-shrink-0 mt-0.5 transition-colors ${
                         currentChatId === conv.id
-                          ? "text-primary"
-                          : "text-muted-foreground"
+                          ? "text-[var(--accent)]"
+                          : "text-[var(--muted-foreground)]"
                       }`}
                     />
                   )}
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium truncate leading-snug">
+                    <h4 className="text-sm font-medium truncate leading-snug text-[var(--foreground)]">
                       {conv.title}
                     </h4>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-[var(--muted-foreground)]">
                         {formatTimestamp(conv.last_active_at)}
                       </p>
-                      <span className="text-xs text-muted-foreground">•</span>
-                      <p className="text-xs text-muted-foreground">
+                      <span className="text-xs text-[var(--muted-foreground)]">•</span>
+                      <p className="text-xs text-[var(--muted-foreground)]">
                         {conv.message_count} {conv.message_count === 1 ? 'msg' : 'msgs'}
                       </p>
                     </div>
@@ -284,7 +284,7 @@ export function ChatSidebar({
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-muted"
+                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-[var(--card)]"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreVertical className="w-3.5 h-3.5" />
