@@ -133,9 +133,9 @@ export default function AdminLayout({
 
   // Render admin layout with top navigation
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--background)]">
       {/* Top Navigation */}
-      <header className="border-b bg-background sticky top-0 z-50">
+      <header className="border-b border-[var(--border)] bg-[var(--background-alt)] sticky top-0 z-50">
         <AdminNav />
       </header>
 

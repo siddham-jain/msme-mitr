@@ -78,12 +78,12 @@ export function AdminNav() {
 
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 bg-background">
+    <div className="flex items-center justify-between px-6 py-3 bg-[var(--background-alt)]">
       {/* Logo and Brand */}
       <div className="flex items-center gap-8">
         <div>
-          <h1 className="text-xl font-bold text-primary">MSME Mitr</h1>
-          <p className="text-xs text-muted-foreground">Admin Dashboard</p>
+          <h1 className="font-display text-xl font-semibold tracking-tight text-[var(--foreground)]">MSME Mitr</h1>
+          <p className="text-xs text-[var(--muted-foreground)]">Admin Dashboard</p>
         </div>
 
         {/* Navigation Links */}
@@ -97,15 +97,15 @@ export function AdminNav() {
                 key={item.href}
                 href={item.href}
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-md transition-colors text-sm
+                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium
                   ${active 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                    ? 'bg-[var(--muted)] text-[var(--foreground)] border-l-2 border-[var(--accent)]' 
+                    : 'text-[var(--muted-foreground)] hover:bg-white/5 hover:text-[var(--foreground)]'
                   }
                 `}
               >
                 <Icon className="h-4 w-4" />
-                <span className="font-medium">{item.name}</span>
+                <span>{item.name}</span>
               </Link>
             )
           })}

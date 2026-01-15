@@ -118,14 +118,14 @@ export default function AdminDashboardPage() {
   }, [])
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[var(--background)]">
       {/* Header */}
-      <div className="border-b bg-background">
-        <div className="px-6 py-4">
+      <div className="border-b border-[var(--border)] bg-[var(--background)]">
+        <div className="px-6 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold">Analytics Dashboard</h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-[var(--foreground)]">Analytics Dashboard</h1>
+              <p className="text-sm text-[var(--muted-foreground)] mt-2">
                 View insights and metrics about user engagement with MSME schemes
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="border-b bg-muted/30">
+      <div className="border-b border-[var(--border)] bg-[var(--background)]">
         <div className="px-6 py-4">
           <FilterPanel 
             onFiltersChange={handleFiltersChange}
@@ -155,7 +155,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Main Content - Full Width */}
-      <div className="flex-1 px-6 py-6 space-y-6">
+      <div className="flex-1 px-6 py-8 space-y-8">
         {/* Stat Cards */}
         <StatCards summary={summary} loading={loading} />
 
