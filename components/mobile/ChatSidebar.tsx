@@ -36,7 +36,6 @@ import { useRouter } from "next/navigation";
 import { useConversations } from "@/hooks/useConversations";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserProfileMenu } from "@/components/shared/UserProfileMenu";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { toast } from "sonner";
 
 interface ChatSidebarProps {
@@ -330,16 +329,18 @@ export function ChatSidebar({
           <UserProfileMenu language={language as 'en' | 'hi'} align="start" fullWidth={true} />
         )}
 
-        {/* Theme Toggle */}
+        {/* Theme Information */}
         <div className="flex items-center justify-between px-1 py-0.5">
-          <span className="text-xs text-muted-foreground font-medium">
+          <span className="text-xs text-[var(--muted-foreground)] font-medium">
             {isHindi ? "थीम" : "Theme"}
           </span>
-          <ThemeToggle size="sm" />
+          <span className="text-xs text-[var(--foreground)] font-medium">
+            Dark
+          </span>
         </div>
 
         {/* Chat Count */}
-        <p className="text-xs text-muted-foreground text-center pt-1">
+        <p className="text-xs text-[var(--muted-foreground)] text-center pt-1">
           {isHindi
             ? `${conversations.length} चैट`
             : `${conversations.length} ${conversations.length === 1 ? 'chat' : 'chats'}`}
