@@ -72,8 +72,14 @@ export function SchemeCard({ scheme, language = "en" }: SchemeCardProps) {
   return (
     <Card 
       className={cn(
-        "flex flex-col hover:shadow-lg transition-all duration-300 ease-in-out",
-        isExpanded && "ring-2 ring-primary/20 shadow-xl z-10"
+        "flex flex-col transition-all duration-300 ease-out",
+        "bg-[var(--card)] backdrop-blur-[8px]",
+        "border border-[var(--border)]",
+        "hover:border-[var(--border-hover)]",
+        "hover:bg-[rgba(26,26,36,0.8)]",
+        "hover:scale-[1.02]",
+        "hover:shadow-[var(--card-hover-shadow)]",
+        isExpanded && "ring-2 ring-[var(--accent)]/20 shadow-xl z-10"
       )}
     >
       <CardHeader className="relative pb-3">
@@ -86,9 +92,9 @@ export function SchemeCard({ scheme, language = "en" }: SchemeCardProps) {
         {/* Scheme Name */}
         <CardTitle 
           className={cn(
-            "text-lg transition-all duration-300 pr-8",
+            "text-lg transition-all duration-300 pr-8 text-[var(--foreground)]",
             isExpanded ? "" : "line-clamp-2",
-            showExpandButton && "cursor-pointer hover:text-primary"
+            showExpandButton && "cursor-pointer hover:text-[var(--accent)]"
           )}
           onClick={showExpandButton ? toggleExpand : undefined}
         >
@@ -112,14 +118,14 @@ export function SchemeCard({ scheme, language = "en" }: SchemeCardProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 h-7 w-7 p-0 hover:bg-primary/10"
+            className="absolute top-2 right-2 h-7 w-7 p-0 hover:bg-white/5"
             onClick={toggleExpand}
             aria-label={isExpanded ? "Show less" : "Show more"}
           >
             {isExpanded ? (
-              <ChevronUp className="h-4 w-4 text-primary" />
+              <ChevronUp className="h-4 w-4 text-[var(--accent)]" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              <ChevronDown className="h-4 w-4 text-[var(--muted-foreground)]" />
             )}
           </Button>
         )}
