@@ -264,8 +264,8 @@ export function ChatInterfaceStream({
 
     // Use requestAnimationFrame to batch DOM updates
     const resizeHandle = requestAnimationFrame(() => {
-      // Reset height to initial 40px to get the correct scrollHeight
-      textarea.style.height = '40px';
+      // Reset height to initial 44px to get the correct scrollHeight
+      textarea.style.height = '44px';
       
       // Calculate new height with max of 120px
       const newHeight = Math.min(textarea.scrollHeight, 120);
@@ -578,21 +578,22 @@ export function ChatInterfaceStream({
       {/* Fixed Input Area - stays at bottom */}
       <form 
         onSubmit={handleSubmit} 
-        className="flex-shrink-0 border-t border-border/60 bg-background p-3 safe-bottom shadow-sm"
+        className="flex-shrink-0 border-t border-[var(--border)] bg-[var(--background)] p-4 safe-bottom"
         aria-label={isHindi ? "संदेश फॉर्म" : "Message form"}
+        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
       >
-        <div className="flex gap-2 items-end max-w-4xl mx-auto">
+        <div className="flex gap-3 items-end max-w-4xl mx-auto">
           <Button
             type="button"
             variant="ghost"
             size="icon-sm"
-            className="flex-shrink-0 hover:bg-muted/50 transition-colors"
+            className="flex-shrink-0"
             onClick={() => toast.info('File attachment coming soon!')}
             aria-label={isHindi ? "फ़ाइल संलग्न करें" : "Attach file"}
             disabled={isLoading}
             tabIndex={0}
           >
-            <Paperclip className="w-4 h-4" />
+            <Paperclip className="w-5 h-5" />
           </Button>
 
           <div className="flex-1 relative">
@@ -606,8 +607,8 @@ export function ChatInterfaceStream({
                   ? "संदेश लिखें..."
                   : "Message MSME Mitr..."
               }
-              className="pr-10 min-h-[40px] max-h-[120px] text-sm resize-none overflow-y-auto transition-[height] duration-100"
-              style={{ height: '40px' }}
+              className="pr-12 min-h-[44px] max-h-[120px] text-sm resize-none overflow-y-auto transition-[height] duration-100"
+              style={{ height: '44px' }}
               disabled={isLoading}
               aria-label={isHindi ? "संदेश इनपुट" : "Message input"}
               aria-describedby="message-hint"
@@ -618,8 +619,8 @@ export function ChatInterfaceStream({
               type="button"
               variant="ghost"
               size="icon-sm"
-              className={`absolute right-1 top-1/2 -translate-y-1/2 transition-all duration-200 ${
-                voice.isRecording ? 'bg-red-500/15 hover:bg-red-500/20' : 'hover:bg-muted/50'
+              className={`absolute right-2 top-1/2 -translate-y-1/2 transition-all duration-200 ${
+                voice.isRecording ? 'bg-red-500/15 hover:bg-red-500/20' : ''
               }`}
               onClick={voice.toggleVoiceMode}
               aria-label={
@@ -632,11 +633,11 @@ export function ChatInterfaceStream({
               tabIndex={0}
             >
               {voice.isTranscribing ? (
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
               ) : voice.isRecording ? (
-                <Square className="w-3.5 h-3.5 text-red-500" aria-hidden="true" />
+                <Square className="w-4 h-4 text-red-500" aria-hidden="true" />
               ) : (
-                <Mic className="w-4 h-4" aria-hidden="true" />
+                <Mic className="w-5 h-5" aria-hidden="true" />
               )}
             </Button>
             {/* Voice recording indicator */}
@@ -673,12 +674,12 @@ export function ChatInterfaceStream({
               type="submit"
               disabled={!input.trim() || isLoading}
               size="icon"
-              className="flex-shrink-0 transition-all duration-200 hover:scale-105 disabled:hover:scale-100"
+              className="flex-shrink-0 transition-all duration-200"
               aria-label={isHindi ? "संदेश भेजें" : "Send message"}
               aria-disabled={!input.trim() || isLoading}
               tabIndex={0}
             >
-              <Send className="w-4 h-4" aria-hidden="true" />
+              <Send className="w-5 h-5" aria-hidden="true" />
               <span className="sr-only">
                 {isHindi ? "संदेश भेजें" : "Send message"}
               </span>
@@ -689,15 +690,12 @@ export function ChatInterfaceStream({
         {/* Language Hint */}
         <p 
           id="message-hint" 
-          className="text-xs text-muted-foreground text-center mt-2.5 max-w-4xl mx-auto flex items-center justify-center gap-1"
+          className="text-xs text-[var(--muted-foreground)] text-center mt-3 max-w-4xl mx-auto"
           aria-live="polite"
         >
-          <Sparkles className="w-3 h-3" aria-hidden="true" />
-          <span>
-            {isHindi
-              ? "12 भाषाओं में बात करें"
-              : "Chat in 12 languages"}
-          </span>
+          {isHindi
+            ? "12 भाषाओं में बात करें"
+            : "Chat in 12 languages"}
         </p>
       </form>
     </div>
