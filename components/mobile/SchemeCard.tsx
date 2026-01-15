@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Card,
+  InteractiveCard,
   CardContent,
   CardDescription,
   CardFooter,
@@ -70,15 +70,9 @@ export function SchemeCard({ scheme, language = "en" }: SchemeCardProps) {
   const showExpandButton = isNameTruncated || isDescriptionTruncated;
 
   return (
-    <Card 
+    <InteractiveCard 
       className={cn(
-        "flex flex-col transition-all duration-300 ease-out",
-        "bg-[var(--card)] backdrop-blur-[8px]",
-        "border border-[var(--border)]",
-        "hover:border-[var(--border-hover)]",
-        "hover:bg-[rgba(26,26,36,0.8)]",
-        "hover:scale-[1.02]",
-        "hover:shadow-[var(--card-hover-shadow)]",
+        "flex flex-col",
         isExpanded && "ring-2 ring-[var(--accent)]/20 shadow-xl z-10"
       )}
     >
@@ -172,6 +166,6 @@ export function SchemeCard({ scheme, language = "en" }: SchemeCardProps) {
           <ExternalLink className="w-4 h-4 ml-2" />
         </Button>
       </CardFooter>
-    </Card>
+    </InteractiveCard>
   );
 }
