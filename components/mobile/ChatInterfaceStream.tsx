@@ -463,18 +463,15 @@ export function ChatInterfaceStream({
 
             {/* Welcome Message - shown when no messages */}
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center min-h-[60vh] animate-fade-in">
-                {/* Welcome Text */}
-                <div className="text-center mb-8 space-y-3 w-full max-w-3xl px-6">
-                  <h1 className="text-3xl font-semibold mb-3 text-foreground whitespace-normal">
-                    {isHindi ? "MSME मित्र AI में आपका स्वागत है" : "Welcome to MSME Mitr AI"}
-                  </h1>
-                  <p className="text-muted-foreground text-base leading-relaxed whitespace-normal">
-                    {isHindi 
-                      ? "सरकारी योजनाओं और व्यवसाय सहायता के लिए आपका AI सहायक"
-                      : "Your AI assistant for government schemes and business support"}
-                  </p>
-                </div>
+              <div className="flex flex-col items-center justify-center min-h-[50vh] text-center animate-fade-in">
+                <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
+                  {isHindi ? "MSME मित्र में आपका स्वागत है" : "Welcome to MSME Mitr"}
+                </h1>
+                <p className="text-[var(--muted-foreground)] text-lg max-w-md">
+                  {isHindi 
+                    ? "सरकारी योजनाओं और व्यवसाय सहायता के लिए आपका AI सहायक"
+                    : "Your AI assistant for government schemes and business support"}
+                </p>
               </div>
             )}
 
@@ -544,17 +541,16 @@ export function ChatInterfaceStream({
 
       {/* Quick Prompts - shown below welcome message when no messages */}
       {messages.length === 0 && (
-        <div className="flex-shrink-0 px-6 pb-6 animate-fade-in" role="region" aria-label={isHindi ? "त्वरित प्रश्न" : "Quick questions"}>
+        <div className="flex-shrink-0 px-4 pb-6 animate-fade-in" role="region" aria-label={isHindi ? "त्वरित प्रश्न" : "Quick questions"}>
           <div className="w-full max-w-3xl mx-auto">
-            <p className="text-xs text-muted-foreground mb-4 text-center font-medium uppercase tracking-wide">
+            <p className="text-xs text-[var(--muted-foreground)] text-center mb-4 uppercase tracking-wide">
               {isHindi ? "त्वरित प्रश्न" : "Quick questions"}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {quickPrompts.map((prompt, idx) => (
-                <Button
+                <button
                   key={idx}
-                  variant="outline"
-                  className="h-auto py-3.5 px-4 justify-start text-left hover:bg-muted/50 hover:border-muted-foreground/20 transition-all duration-200 flex items-center gap-3 whitespace-normal"
+                  className="flex items-center gap-3 p-4 text-left bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-lg transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
                   onClick={() =>
                     handleQuickPrompt(
                       isHindi && prompt.textHi ? prompt.textHi : prompt.text
@@ -564,11 +560,11 @@ export function ChatInterfaceStream({
                   aria-label={`${isHindi ? "त्वरित प्रश्न" : "Quick question"}: ${isHindi && prompt.textHi ? prompt.textHi : prompt.text}`}
                   tabIndex={0}
                 >
-                  <span className="text-muted-foreground flex-shrink-0 w-5 h-5 flex items-center justify-center" aria-hidden="true">{prompt.icon}</span>
-                  <span className="text-sm leading-snug flex-1 text-left">
+                  <span className="text-[var(--muted-foreground)]" aria-hidden="true">{prompt.icon}</span>
+                  <span className="text-sm text-[var(--foreground)]">
                     {isHindi && prompt.textHi ? prompt.textHi : prompt.text}
                   </span>
-                </Button>
+                </button>
               ))}
             </div>
           </div>
