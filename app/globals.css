@@ -1402,6 +1402,38 @@
     text-decoration: none;
   }
 
+  /* Not screen reader only - opposite of sr-only */
+  .not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  /* Focus visible only - show outline only for keyboard focus */
+  .focus-visible-only:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    * {
+      border-color: currentColor !important;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      border: 2px solid currentColor !important;
+    }
+  }
+
   /* ============================================
      REDUCED MOTION SUPPORT
      Requirements: 12.5, 13.5
