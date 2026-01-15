@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { ChatSidebar } from "@/components/mobile/ChatSidebar";
 import { SchemeCard } from "@/components/mobile/SchemeCard";
 import { Input } from "@/components/ui/input";
