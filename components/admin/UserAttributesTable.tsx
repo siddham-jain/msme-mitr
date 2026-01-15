@@ -250,7 +250,7 @@ export function UserAttributesTable({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-lg border border-[var(--border)]">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -339,7 +339,7 @@ export function UserAttributesTable({
                   <TableRow
                     key={user.id}
                     onClick={() => handleRowClick(user)}
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-[var(--muted)]/50 transition-colors border-b border-[var(--border)]"
                   >
                     <TableCell className="font-medium">
                       {user.user_email || 'Unknown'}
