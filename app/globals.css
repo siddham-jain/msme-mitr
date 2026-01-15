@@ -1402,8 +1402,23 @@
     text-decoration: none;
   }
 
-  /* Reduced motion support */
+  /* ============================================
+     REDUCED MOTION SUPPORT
+     Requirements: 12.5, 13.5
+     ============================================ */
+
+  /* Disable all animations and transitions when user prefers reduced motion */
   @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Disable specific animation classes */
     .animate-scale-glow,
     .animate-lift-shadow,
     .animate-underline-sweep,
@@ -1422,6 +1437,21 @@
     
     .animate-underline-sweep::after {
       transition: none !important;
+    }
+
+    /* Disable smooth scrolling */
+    html {
+      scroll-behavior: auto !important;
+    }
+
+    /* Disable button press effects */
+    button:active {
+      transform: none !important;
+    }
+
+    /* Disable card hover effects */
+    .hover\:scale-\[1\.02\]:hover {
+      transform: none !important;
     }
   }
 
