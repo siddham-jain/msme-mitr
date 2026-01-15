@@ -130,6 +130,13 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased min-h-screen bg-background">
+        {/* Skip link for keyboard navigation - Requirement 12.3 */}
+        <a 
+          href="#main-content" 
+          className="sr-only"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <AuthProvider>
             {children}
