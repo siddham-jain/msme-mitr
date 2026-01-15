@@ -30,12 +30,12 @@ export interface LocationDistributionChartProps {
 // ============================================================================
 
 const COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
-  'hsl(var(--primary))',
+  '#8B5CF6', // Purple
+  '#3B82F6', // Blue
+  '#10B981', // Green
+  '#F59E0B', // Amber
+  '#EF4444', // Red
+  '#EC4899', // Pink
 ]
 
 // ============================================================================
@@ -59,14 +59,14 @@ export function LocationDistributionChart({ summary, loading = false }: Location
     if (active && payload && payload.length) {
       const data = payload[0]
       return (
-        <div className="bg-card border rounded-lg shadow-lg p-3 space-y-1">
-          <p className="font-semibold text-sm">{data.payload.name}</p>
+        <div className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-lg shadow-lg p-3 space-y-1">
+          <p className="font-semibold text-sm text-[var(--foreground)]">{data.payload.name}</p>
           <div className="space-y-0.5 text-xs">
-            <p className="text-muted-foreground">
-              Users: <span className="font-medium text-foreground">{data.value}</span>
+            <p className="text-[var(--muted-foreground)]">
+              Users: <span className="font-medium text-[var(--foreground)]">{data.value}</span>
             </p>
-            <p className="text-muted-foreground">
-              Percentage: <span className="font-medium text-foreground">{data.payload.percentage.toFixed(1)}%</span>
+            <p className="text-[var(--muted-foreground)]">
+              Percentage: <span className="font-medium text-[var(--foreground)]">{data.payload.percentage.toFixed(1)}%</span>
             </p>
           </div>
         </div>
@@ -129,15 +129,16 @@ export function LocationDistributionChart({ summary, loading = false }: Location
             data={chartData}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis 
               dataKey="name" 
               className="text-xs"
               angle={-45}
               textAnchor="end"
               height={80}
+              stroke="var(--muted-foreground)"
             />
-            <YAxis className="text-xs" />
+            <YAxis className="text-xs" stroke="var(--muted-foreground)" />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="value" radius={[4, 4, 0, 0]}>
               {chartData.map((entry, index) => (

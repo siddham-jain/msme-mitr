@@ -61,11 +61,11 @@ export function ConversationTrendChart({ summary, loading = false }: Conversatio
     if (active && payload && payload.length) {
       const data = payload[0]
       return (
-        <div className="bg-card border rounded-lg shadow-lg p-3 space-y-1">
-          <p className="font-semibold text-sm">{data.payload.date}</p>
+        <div className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-lg shadow-lg p-3 space-y-1">
+          <p className="font-semibold text-sm text-[var(--foreground)]">{data.payload.date}</p>
           <div className="space-y-0.5 text-xs">
-            <p className="text-muted-foreground">
-              Conversations: <span className="font-medium text-foreground">{data.value}</span>
+            <p className="text-[var(--muted-foreground)]">
+              Conversations: <span className="font-medium text-[var(--foreground)]">{data.value}</span>
             </p>
           </div>
         </div>
@@ -128,19 +128,20 @@ export function ConversationTrendChart({ summary, loading = false }: Conversatio
             data={chartData}
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis 
               dataKey="date" 
               className="text-xs"
+              stroke="var(--muted-foreground)"
             />
-            <YAxis className="text-xs" />
+            <YAxis className="text-xs" stroke="var(--muted-foreground)" />
             <Tooltip content={<CustomTooltip />} />
             <Line 
               type="monotone" 
               dataKey="value" 
-              stroke="hsl(var(--primary))" 
+              stroke="var(--accent)" 
               strokeWidth={2}
-              dot={{ fill: 'hsl(var(--primary))' }}
+              dot={{ fill: 'var(--accent)' }}
               activeDot={{ r: 6 }}
             />
           </LineChart>

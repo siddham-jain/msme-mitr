@@ -30,14 +30,14 @@ export interface IndustryDistributionChartProps {
 // ============================================================================
 
 const COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
-  'hsl(var(--primary))',
-  'hsl(var(--secondary))',
-  'hsl(var(--accent))',
+  '#8B5CF6', // Purple
+  '#3B82F6', // Blue
+  '#10B981', // Green
+  '#F59E0B', // Amber
+  '#EF4444', // Red
+  '#EC4899', // Pink
+  '#6366F1', // Indigo
+  '#14B8A6', // Teal
 ]
 
 // ============================================================================
@@ -61,14 +61,14 @@ export function IndustryDistributionChart({ summary, loading = false }: Industry
     if (active && payload && payload.length) {
       const data = payload[0]
       return (
-        <div className="bg-card border rounded-lg shadow-lg p-3 space-y-1">
-          <p className="font-semibold text-sm">{data.name}</p>
+        <div className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-lg shadow-lg p-3 space-y-1">
+          <p className="font-semibold text-sm text-[var(--foreground)]">{data.name}</p>
           <div className="space-y-0.5 text-xs">
-            <p className="text-muted-foreground">
-              Users: <span className="font-medium text-foreground">{data.value}</span>
+            <p className="text-[var(--muted-foreground)]">
+              Users: <span className="font-medium text-[var(--foreground)]">{data.value}</span>
             </p>
-            <p className="text-muted-foreground">
-              Percentage: <span className="font-medium text-foreground">{data.payload.percentage.toFixed(1)}%</span>
+            <p className="text-[var(--muted-foreground)]">
+              Percentage: <span className="font-medium text-[var(--foreground)]">{data.payload.percentage.toFixed(1)}%</span>
             </p>
           </div>
         </div>
