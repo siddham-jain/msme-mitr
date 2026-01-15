@@ -23,6 +23,7 @@ export function LoginForm() {
   const router = useRouter()
   const { signIn } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -35,20 +36,23 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormData) {
     try {
       setIsLoading(true)
+      setError(null)
       await signIn(data.email, data.password)
       toast.success('Welcome back!')
       router.push('/chat')
     } catch (error: any) {
       console.error('Login error:', error)
       
-      // Handle specific error messages
+      // Handle specific error messages - Requirement 9.6
+      let errorMessage = 'Failed to sign in. Please try again.'
       if (error.message?.includes('Invalid login credentials')) {
-        toast.error('Invalid email or password')
+        errorMessage = 'Invalid email or password'
       } else if (error.message?.includes('Email not confirmed')) {
-        toast.error('Please verify your email address')
-      } else {
-        toast.error('Failed to sign in. Please try again.')
+        errorMessage = 'Please verify your email address'
       }
+      
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -56,23 +60,39 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" aria-label="Sign in form">
+        {/* Error Message - Requirements 9.6, 12.4 */}
+        {error && (
+          <div 
+            role="alert"
+            aria-live="polite"
+            className="p-3 rounded-lg bg-[var(--destructive)]/10 border border-[var(--destructive)]/20 text-[var(--destructive)] text-sm"
+          >
+            {error}
+          </div>
+        )}
+
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-sm font-medium text-[var(--foreground)]">
+                Email
+              </FormLabel>
               <FormControl>
                 <Input
+                  id="email"
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
                   disabled={isLoading}
+                  aria-describedby={form.formState.errors.email ? "email-error" : undefined}
+                  aria-invalid={!!form.formState.errors.email}
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage id="email-error" />
             </FormItem>
           )}
         />
@@ -82,17 +102,22 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-sm font-medium text-[var(--foreground)]">
+                Password
+              </FormLabel>
               <FormControl>
                 <Input
+                  id="password"
                   type="password"
                   placeholder="••••••••"
                   autoComplete="current-password"
                   disabled={isLoading}
+                  aria-describedby={form.formState.errors.password ? "password-error" : undefined}
+                  aria-invalid={!!form.formState.errors.password}
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage id="password-error" />
             </FormItem>
           )}
         />
@@ -100,11 +125,13 @@ export function LoginForm() {
         <Button
           type="submit"
           className="w-full"
+          size="lg"
           disabled={isLoading}
+          aria-busy={isLoading}
         >
           {isLoading ? (
             <>
-              <Loader2 className="animate-spin" />
+              <Loader2 className="animate-spin" aria-hidden="true" />
               Signing in...
             </>
           ) : (
