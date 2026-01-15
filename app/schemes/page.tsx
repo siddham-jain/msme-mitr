@@ -172,14 +172,14 @@ export default function SchemesPage() {
         <main className="flex-1 overflow-y-auto bg-[var(--background)]">
         <div className="container mx-auto px-4 py-24 md:py-32">
           {/* AI Assistant Prompt */}
-          <Card className="bg-primary/5 border-primary/20 p-4 mb-4">
+          <Card className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] p-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="bg-primary rounded-lg p-2 flex-shrink-0">
-                <Bot className="w-5 h-5 text-primary-foreground" />
+              <div className="bg-[var(--accent)] rounded-lg p-2 flex-shrink-0">
+                <Bot className="w-5 h-5 text-[var(--accent-foreground)]" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">Need help finding schemes?</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm font-medium text-[var(--foreground)]">Need help finding schemes?</p>
+                <p className="text-xs text-[var(--muted-foreground)]">
                   Ask our AI assistant for personalized recommendations
                 </p>
               </div>
@@ -196,18 +196,18 @@ export default function SchemesPage() {
           </Card>
 
           {/* Search Bar */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
             <Input
               placeholder="Search schemes..."
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
-              className="pl-10 h-12 text-base"
+              className="pl-10 h-11"
             />
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
+          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             {categories.map((category) => (
               <Badge
                 key={category}
@@ -221,8 +221,8 @@ export default function SchemesPage() {
           </div>
 
           {/* Results Count */}
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-sm text-[var(--muted-foreground)]">
               {filteredSchemes.length} schemes found
             </p>
             <Button variant="outline" size="sm" className="h-8">
@@ -231,15 +231,15 @@ export default function SchemesPage() {
             </Button>
           </div>
 
-          {/* Schemes Grid - Responsive layout with auto-flow for expanded cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+          {/* Schemes Grid - Responsive: 1 col mobile, 2 col tablet, 3 col desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSchemes.length > 0 ? (
               filteredSchemes.map((scheme, index) => (
                 <SchemeCard key={index} scheme={scheme} language="en" />
               ))
             ) : (
               <div className="col-span-full text-center py-12">
-                <p className="text-muted-foreground mb-4">
+                <p className="text-[var(--muted-foreground)] mb-4">
                   No schemes found matching your criteria
                 </p>
                 <Button asChild>
