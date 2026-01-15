@@ -1365,7 +1365,10 @@
     .animate-scale-glow,
     .animate-lift-shadow,
     .animate-underline-sweep,
-    .animate-flip-rotate {
+    .animate-flip-rotate,
+    .animate-slide-in,
+    .animate-fade-in,
+    .animate-pulse-subtle {
       animation: none !important;
       transition: none !important;
     }
