@@ -147,7 +147,10 @@ export function ChatSidebar({
 
 
   return (
-    <aside className="flex flex-col h-full bg-background border-r">
+    <aside 
+      className="flex flex-col h-full bg-[var(--background-alt)] border-r border-[var(--border)]"
+      aria-label="Conversation history"
+    >
       {/* Sidebar Header */}
       <div className="p-3 space-y-2">
         {/* New Chat Button */}
@@ -173,10 +176,10 @@ export function ChatSidebar({
         </Link>
       </div>
 
-      <div className="border-t" />
+      <div className="border-t border-[var(--border)]" />
 
       {/* Chat History Section */}
-      <div className="px-4 py-2.5">
+      <div className="px-3 py-2.5">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
           <Clock className="w-3.5 h-3.5" />
           {isHindi ? "चैट इतिहास" : "Chat History"}
@@ -321,7 +324,7 @@ export function ChatSidebar({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-3 border-t space-y-2.5">
+      <div className="p-3 border-t border-[var(--border)] space-y-2.5">
         {/* User Profile Menu */}
         {profile && (
           <UserProfileMenu language={language as 'en' | 'hi'} align="start" fullWidth={true} />
