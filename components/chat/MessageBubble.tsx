@@ -67,8 +67,8 @@ export const MessageBubble = React.memo(function MessageBubble({ role, content, 
       {/* Assistant avatar with Sparkles icon */}
       {!isUser && (
         <div className="flex-shrink-0">
-          <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
-            <Sparkles className="w-4 h-4 text-primary" />
+          <div className="w-8 h-8 rounded-full bg-[var(--muted)] flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-[var(--muted-foreground)]" />
           </div>
         </div>
       )}
@@ -76,10 +76,10 @@ export const MessageBubble = React.memo(function MessageBubble({ role, content, 
       {/* Message bubble */}
       <div
         className={cn(
-          "max-w-[85%] rounded-2xl px-4 py-2.5 shadow-sm",
+          "max-w-[80%] rounded-2xl px-4 py-3",
           isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted/50 text-foreground border border-border/50",
+            ? "bg-[var(--muted)] text-[var(--foreground)]"
+            : "bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] text-[var(--foreground)]",
           isStreaming && "animate-pulse-subtle"
         )}
       >
@@ -97,11 +97,11 @@ export const MessageBubble = React.memo(function MessageBubble({ role, content, 
         </div>
       </div>
 
-      {/* User avatar with User icon */}
+      {/* User avatar - removed for cleaner look */}
       {isUser && (
         <div className="flex-shrink-0">
-          <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center ring-1 ring-border">
-            <User className="w-4 h-4 text-muted-foreground" />
+          <div className="w-8 h-8 rounded-full bg-[var(--muted)] flex items-center justify-center">
+            <User className="w-4 h-4 text-[var(--muted-foreground)]" />
           </div>
         </div>
       )}

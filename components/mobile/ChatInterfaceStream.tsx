@@ -386,18 +386,18 @@ export function ChatInterfaceStream({
   }, [preservedInput, setInput]);
 
   return (
-    <div className="flex flex-col h-full bg-background relative">
+    <div className="flex flex-col h-full bg-[var(--background)] relative">
       {/* Loading Overlay - shown during conversation transitions */}
       {(transitionState === 'loading' || transitionState === 'transitioning') && (
         <div 
-          className="absolute inset-0 bg-background/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
+          className="absolute inset-0 bg-[#0A0A0F]/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
           role="status"
           aria-live="polite"
           aria-label={isHindi ? 'बातचीत लोड हो रही है' : 'Loading conversation'}
         >
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" aria-hidden="true" />
-            <p className="text-sm text-muted-foreground font-medium">
+            <Loader2 className="w-8 h-8 animate-spin text-[#F59E0B]" aria-hidden="true" />
+            <p className="text-sm text-[#71717A] font-medium">
               {isHindi ? 'बातचीत लोड हो रही है...' : 'Loading conversation...'}
             </p>
           </div>
@@ -455,7 +455,7 @@ export function ChatInterfaceStream({
       {/* Scrollable Messages Area - grows to fill space */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="py-4">
+          <div className="py-8">
             {/* Offline Mode Message */}
             <div className="px-4">
               <OfflineModeMessage />
@@ -478,7 +478,7 @@ export function ChatInterfaceStream({
               </div>
             )}
 
-            <div className="space-y-4 pb-4 px-4">
+            <div className="space-y-6 pb-4 px-4 max-w-4xl mx-auto">
               {messages.map((message, index) => (
                 <MessageBubble
                   key={message.id}
