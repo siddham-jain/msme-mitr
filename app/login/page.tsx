@@ -1,64 +1,47 @@
 import Link from 'next/link'
 import { LoginForm } from '@/components/auth/LoginForm'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-6 bg-background">
-      <div className="w-full" style={{ maxWidth: '28rem' }}>
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-muted-foreground">Sign in to your MSME Mitr account</p>
-        </div>
-
-        {/* Login Form Card */}
-        <div className="bg-card border rounded-lg shadow-sm p-6 mb-6">
-          {/* Form Title */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-2">Sign in</h2>
-            <p className="text-sm text-muted-foreground">
-              Enter your email and password to access your account
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
+      {/* Ambient background glow effect - Requirement 9.2 */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[var(--accent)]/[0.02] blur-[150px] rounded-full" />
+      </div>
+      
+      {/* Auth Card - Centered with glass effect - Requirements 9.1, 9.2 */}
+      <div className="w-full max-w-md relative z-10">
+        {/* Glass Card with xl border radius (16px) */}
+        <div className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-xl p-8">
+          {/* Header with Space Grotesk - Requirement 9.5 */}
+          <div className="text-center mb-8">
+            <h1 className="font-display text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+              Welcome back
+            </h1>
+            <p className="text-[var(--muted-foreground)] mt-2">
+              Sign in to your account
             </p>
           </div>
-
+          
           {/* Login Form */}
-          <div className="mb-6">
-            <LoginForm />
-          </div>
-
+          <LoginForm />
+          
           {/* Forgot Password Link */}
-          <div className="text-center mb-6">
-            <Link href="/reset-password" className="text-sm text-primary hover:underline">
+          <div className="text-center mt-6">
+            <Link 
+              href="/reset-password" 
+              className="text-sm text-[var(--foreground)] hover:underline"
+            >
               Forgot your password?
             </Link>
           </div>
-
-          <Separator className="my-6" />
-
-          {/* Signup Link */}
-          <div>
-            <p className="text-sm text-muted-foreground text-center mb-4">
-              Don't have an account?
-            </p>
-            <Link href="/signup" className="block">
-              <Button variant="outline" className="w-full">
-                Create an account
-              </Button>
-            </Link>
-          </div>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground">
-          By signing in, you agree to our{' '}
-          <Link href="/terms" className="text-primary hover:underline">
-            Terms of Service
-          </Link>{' '}
-          and{' '}
-          <Link href="/privacy" className="text-primary hover:underline">
-            Privacy Policy
+        
+        {/* Signup Link */}
+        <p className="text-center text-sm text-[var(--muted-foreground)] mt-6">
+          Don't have an account?{' '}
+          <Link href="/signup" className="text-[var(--foreground)] hover:underline">
+            Sign up
           </Link>
         </p>
       </div>
