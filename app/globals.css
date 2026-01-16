@@ -416,6 +416,7 @@
   * {
     @apply border-border outline-ring/50;
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    box-sizing: border-box; /* Ensure consistent box model */
   }
 
   html {
@@ -424,6 +425,7 @@
     text-size-adjust: 100%;
     /* Smooth scrolling */
     scroll-behavior: smooth;
+    box-sizing: border-box;
   }
 
   body {
@@ -435,6 +437,14 @@
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Fix for text wrapping issues */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: normal;
   }
 
   /* Touch-friendly interactive elements on mobile */

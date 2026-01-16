@@ -463,11 +463,20 @@ export function ChatInterfaceStream({
 
             {/* Welcome Message - shown when no messages */}
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center min-h-[50vh] text-center animate-fade-in">
+              <div className="flex flex-col items-center justify-center min-h-[50vh] text-center animate-fade-in px-6">
                 <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
                   {isHindi ? "MSME मित्र में आपका स्वागत है" : "Welcome to MSME Mitr"}
                 </h1>
-                <p className="text-[var(--muted-foreground)] text-lg max-w-md">
+                <p 
+                  className="text-[var(--muted-foreground)] text-lg mx-auto" 
+                  style={{ 
+                    maxWidth: '600px',
+                    whiteSpace: 'normal',
+                    wordBreak: 'normal',
+                    display: 'block',
+                    width: '100%'
+                  }}
+                >
                   {isHindi 
                     ? "सरकारी योजनाओं और व्यवसाय सहायता के लिए आपका AI सहायक"
                     : "Your AI assistant for government schemes and business support"}
