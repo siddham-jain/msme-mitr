@@ -107,7 +107,7 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
   return (
     <>
       {/* Top App Bar */}
-      <header className="app-bar flex items-center justify-between px-4 py-3 shadow-sm">
+      <header className="app-bar flex items-center justify-between px-4 py-3 shadow-sm lg:hidden">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -118,9 +118,13 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
           >
             <Menu className="w-6 h-6" />
           </Button>
-          <div className="flex items-center gap-2">
-            <Bot className="w-6 h-6 text-primary" />
-            <h1 className="text-lg font-bold text-primary">MSME Mitr AI</h1>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg border border-white/5">
+              <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              </div>
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-foreground">MSME Mitr</span>
           </div>
         </div>
 
@@ -156,9 +160,13 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
       <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
         <SheetContent side="left" className="w-[80vw] max-w-[320px] sm:w-[320px] p-0 flex flex-col">
           <SheetHeader className="px-6 py-6 border-b bg-primary text-primary-foreground">
-            <SheetTitle className="text-xl flex items-center gap-2">
-              <Bot className="w-6 h-6" />
-              <span>MSME Mitr AI</span>
+            <SheetTitle className="text-xl flex items-center gap-3">
+              <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg border border-white/10">
+                <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                </div>
+              </div>
+              <span>MSME Mitr</span>
             </SheetTitle>
             <p className="text-sm opacity-90 mt-1">
               Your AI Business Advisor
@@ -175,10 +183,9 @@ export function MobileNav({ onMenuClick }: MobileNavProps = {}) {
                   onClick={() => setIsMenuOpen(false)}
                   className={`
                     flex items-center gap-4 px-6 py-4 text-base transition-colors
-                    ${
-                      active
-                        ? "bg-primary/10 text-primary border-l-4 border-primary"
-                        : "hover:bg-muted"
+                    ${active
+                      ? "bg-primary/10 text-primary border-l-4 border-primary"
+                      : "hover:bg-muted"
                     }
                   `}
                 >

@@ -108,9 +108,13 @@ export default function SchemesPage() {
           >
             <Menu className="w-6 h-6" />
           </Button>
-          <div className="flex items-center gap-2">
-            <Bot className="w-6 h-6 text-[var(--foreground)]" />
-            <h1 className="text-lg font-bold text-[var(--foreground)]">MSME Mitr AI</h1>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg border border-white/5">
+              <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              </div>
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-foreground">MSME Mitr</span>
           </div>
         </div>
 
@@ -157,6 +161,7 @@ export default function SchemesPage() {
             onNewChat={handleNewChat}
             onSelectChat={handleSelectChat}
             onBrowseSchemes={handleBrowseSchemes}
+            showLogo={false}
           />
         </aside>
 
@@ -170,86 +175,86 @@ export default function SchemesPage() {
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto bg-[var(--background)]">
-        <div className="container mx-auto px-4 py-24 md:py-32">
-          {/* AI Assistant Prompt */}
-          <Card className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] p-4 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-[var(--accent)] rounded-lg p-2 flex-shrink-0">
-                <Bot className="w-5 h-5 text-[var(--accent-foreground)]" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-[var(--foreground)]">Need help finding schemes?</p>
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  Ask our AI assistant for personalized recommendations
-                </p>
-              </div>
-              <Button 
-                asChild
-                size="sm"
-                className="flex-shrink-0"
-              >
-                <Link href="/chat">
-                  Chat Now
-                </Link>
-              </Button>
-            </div>
-          </Card>
-
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
-            <Input
-              placeholder="Search schemes..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="pl-10 h-11"
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-            {categories.map((category) => (
-              <Badge
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                className="px-3 py-1.5 cursor-pointer whitespace-nowrap"
-                onClick={() => handleCategoryChange(category)}
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
-
-          {/* Results Count */}
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-sm text-[var(--muted-foreground)]">
-              {filteredSchemes.length} schemes found
-            </p>
-            <Button variant="outline" size="sm" className="h-8">
-              <Filter className="w-4 h-4 mr-1" />
-              Filters
-            </Button>
-          </div>
-
-          {/* Schemes Grid - Responsive: 1 col mobile, 2 col tablet, 3 col desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSchemes.length > 0 ? (
-              filteredSchemes.map((scheme, index) => (
-                <SchemeCard key={index} scheme={scheme} language="en" />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-[var(--muted-foreground)] mb-4">
-                  No schemes found matching your criteria
-                </p>
-                <Button asChild>
-                  <Link href="/chat">Ask AI for Help</Link>
+          <div className="container mx-auto px-4 py-24 md:py-32">
+            {/* AI Assistant Prompt */}
+            <Card className="bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] p-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-[var(--accent)] rounded-lg p-2 flex-shrink-0">
+                  <Bot className="w-5 h-5 text-[var(--accent-foreground)]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[var(--foreground)]">Need help finding schemes?</p>
+                  <p className="text-xs text-[var(--muted-foreground)]">
+                    Ask our AI assistant for personalized recommendations
+                  </p>
+                </div>
+                <Button
+                  asChild
+                  size="sm"
+                  className="flex-shrink-0"
+                >
+                  <Link href="/chat">
+                    Chat Now
+                  </Link>
                 </Button>
               </div>
-            )}
+            </Card>
+
+            {/* Search Bar */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
+              <Input
+                placeholder="Search schemes..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10 h-11"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+              {categories.map((category) => (
+                <Badge
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  className="px-3 py-1.5 cursor-pointer whitespace-nowrap"
+                  onClick={() => handleCategoryChange(category)}
+                >
+                  {category}
+                </Badge>
+              ))}
+            </div>
+
+            {/* Results Count */}
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm text-[var(--muted-foreground)]">
+                {filteredSchemes.length} schemes found
+              </p>
+              <Button variant="outline" size="sm" className="h-8">
+                <Filter className="w-4 h-4 mr-1" />
+                Filters
+              </Button>
+            </div>
+
+            {/* Schemes Grid - Responsive: 1 col mobile, 2 col tablet, 3 col desktop */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredSchemes.length > 0 ? (
+                filteredSchemes.map((scheme, index) => (
+                  <SchemeCard key={index} scheme={scheme} language="en" />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-[var(--muted-foreground)] mb-4">
+                    No schemes found matching your criteria
+                  </p>
+                  <Button asChild>
+                    <Link href="/chat">Ask AI for Help</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
       </div>
     </div>
   );

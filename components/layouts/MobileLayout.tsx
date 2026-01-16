@@ -17,7 +17,7 @@ export function MobileLayout({
   onMenuClick,
 }: MobileLayoutProps) {
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+    <div className="h-screen flex flex-col bg-background bg-zen-gradient overflow-hidden">
       {/* Mobile Navigation - Header at top, navigation in sidebar */}
       <MobileNav onMenuClick={onMenuClick} />
 

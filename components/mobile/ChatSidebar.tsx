@@ -45,6 +45,7 @@ interface ChatSidebarProps {
   currentChatId?: string;
   refreshTrigger?: number; // Optional prop to trigger refresh
   onBrowseSchemes?: () => void; // Optional callback when Browse Schemes is clicked
+  showLogo?: boolean;
 }
 
 export function ChatSidebar({
@@ -54,6 +55,7 @@ export function ChatSidebar({
   currentChatId,
   refreshTrigger,
   onBrowseSchemes,
+  showLogo = true,
 }: ChatSidebarProps) {
   const router = useRouter();
   const { profile } = useAuth();
@@ -116,12 +118,12 @@ export function ChatSidebar({
     if (!conversationToDelete) return;
 
     const isCurrentChat = conversationToDelete === currentChatId;
-    
+
     const success = await deleteConversationDb(conversationToDelete);
     if (success) {
       // Requirement 4.4: Remove conversation from sidebar when deleted
       console.log('[ChatSidebar] Conversation deleted:', conversationToDelete);
-      
+
       // Requirement 4.5, 4.6: If deleting current chat, auto-create or switch to another conversation
       if (isCurrentChat) {
         console.log('[ChatSidebar] Deleted conversation was active, triggering new chat');
@@ -146,225 +148,167 @@ export function ChatSidebar({
 
 
   return (
-    <aside 
-      className="flex flex-col h-full bg-[var(--background-alt)] border-r border-[var(--border)]"
+    <aside
+      className="flex flex-col h-full bg-[var(--sidebar)] border-r border-[var(--sidebar-border)]"
       aria-label="Conversation history"
     >
-      {/* Sidebar Header */}
-      <div className="p-3 space-y-2">
-        {/* New Chat Button */}
-        <Button
-          onClick={onNewChat}
-          className="w-full justify-start gap-2 btn-touch transition-all duration-200 hover:scale-[1.02]"
-          size="default"
-        >
-          <Plus className="w-4 h-4" />
-          <span className="text-sm font-medium">{isHindi ? "नया चैट" : "New Chat"}</span>
-        </Button>
+      {/* Sidebar Header - Zen Styled */}
+      <div className="p-5 pb-2">
+        {showLogo && (
+          <div className="flex items-center gap-3 mb-8 px-2">
+            <div className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg border border-white/5">
+              <div className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              </div>
+            </div>
+            <span className="font-semibold text-lg tracking-tight text-foreground">MSME Mitr</span>
+          </div>
+        )}
 
-        {/* Schemes Button */}
-        <Link href="/schemes" className="block" onClick={onBrowseSchemes}>
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 btn-touch transition-all duration-200 hover:scale-[1.02]"
-            size="default"
+        <div className="space-y-2">
+          {/* New Chat Button - Styled as Zen Nav Item */}
+          <button
+            onClick={onNewChat}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/5 text:[var(--foreground)] hover:bg-white/10 hover:text-white transition-all group border border-transparent hover:border-white/5"
           >
-            <Search className="w-4 h-4" />
-            <span className="text-sm font-medium">{isHindi ? "योजनाएं खोजें" : "Browse Schemes"}</span>
-          </Button>
-        </Link>
+            <Plus className="w-5 h-5 text-[var(--text-muted)] group-hover:text-white transition-colors" />
+            <span className="text-sm font-medium">{isHindi ? "नया चैट" : "New Chat"}</span>
+          </button>
+
+          {/* Schemes Button */}
+          <Link href="/schemes" className="block" onClick={onBrowseSchemes}>
+            <button
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[var(--text-muted)] hover:bg-white/5 hover:text-white transition-all group"
+            >
+              <Search className="w-5 h-5 transition-colors" />
+              <span className="text-sm font-medium">{isHindi ? "योजनाएं खोजें" : "Browse Schemes"}</span>
+            </button>
+          </Link>
+        </div>
       </div>
 
-      <div className="border-t border-[var(--border)]" />
+      <div className="px-5 py-2">
+        <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent opacity-50" />
+      </div>
 
       {/* Chat History Section */}
-      <div className="px-3 py-2.5">
-        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5" />
-          {isHindi ? "चैट इतिहास" : "Chat History"}
+      <div className="px-6 py-2">
+        <h3 className="text-[10px] font-semibold text-[var(--text-muted)] uppercase tracking-wider flex items-center gap-2 opacity-60">
+          <Clock className="w-3 h-3" />
+          {isHindi ? "इतिहास" : "History"}
         </h3>
       </div>
 
-      {/* Chat History List - with explicit height for scrolling */}
-      <div className="flex-1 overflow-hidden px-2">
-        <ScrollArea className="h-full">
-          <div className="space-y-1 pb-4 pr-2">
+      {/* Chat History List */}
+      <div className="flex-1 overflow-hidden px-4">
+        <ScrollArea className="h-full custom-scrollbar pr-2">
+          <div className="space-y-1 pb-4">
             {loading ? (
-            // Loading skeleton (Requirement 9.10)
-            <div className="space-y-2 px-2 animate-pulse">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="rounded-lg p-2.5 space-y-2">
-                  <div className="flex items-start gap-2.5">
-                    <Skeleton className="w-4 h-4 rounded flex-shrink-0" />
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-4 w-3/4" />
-                      <div className="flex items-center gap-2">
-                        <Skeleton className="h-3 w-16" />
-                        <Skeleton className="h-3 w-12" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : error ? (
-            <div className="p-6 text-center text-destructive animate-fade-in">
-              <MessageSquare className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p className="text-sm font-medium mb-1">
-                {isHindi ? "लोड करने में विफल" : "Failed to load"}
-              </p>
-              <p className="text-xs text-muted-foreground mb-3">
-                {isHindi ? "कृपया पुनः प्रयास करें" : "Please try again"}
-              </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => refresh()}
-                className="transition-all duration-200 hover:scale-105"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                {isHindi ? "पुनः प्रयास करें" : "Retry"}
-              </Button>
-            </div>
-          ) : conversations.length === 0 ? (
-            <div className="p-6 text-center text-muted-foreground animate-fade-in">
-              <MessageSquare className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p className="text-sm font-medium mb-1">
-                {isHindi ? "कोई चैट नहीं" : "No conversations yet"}
-              </p>
-              <p className="text-xs leading-relaxed">
-                {isHindi ? "नया चैट शुरू करें" : "Start a new chat to begin"}
-              </p>
-            </div>
-          ) : (
-            conversations.map((conv) => (
-              <div
-                key={conv.id}
-                className={`
-                  group relative rounded-lg transition-all duration-200 cursor-pointer
-                  ${
-                    currentChatId === conv.id
-                      ? "border-l-2 border-[var(--accent)] bg-[var(--card)] backdrop-blur-[8px]"
-                      : "hover:bg-[var(--card)] hover:backdrop-blur-[8px] hover:border hover:border-[var(--border-hover)]"
-                  }
-                `}
-                onClick={() => onSelectChat?.(conv.id)}
-              >
-                <div className="flex items-start gap-2.5 p-2">
-                  {conv.is_pinned ? (
-                    <Pin className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--accent)] fill-current" />
-                  ) : (
-                    <MessageSquare
-                      className={`w-4 h-4 flex-shrink-0 mt-0.5 transition-colors ${
-                        currentChatId === conv.id
-                          ? "text-[var(--accent)]"
-                          : "text-[var(--muted-foreground)]"
-                      }`}
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium truncate leading-snug text-[var(--foreground)]">
-                      {conv.title}
-                    </h4>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      <p className="text-xs text-[var(--muted-foreground)]">
-                        {formatTimestamp(conv.last_active_at)}
-                      </p>
-                      <span className="text-xs text-[var(--muted-foreground)]">•</span>
-                      <p className="text-xs text-[var(--muted-foreground)]">
-                        {conv.message_count} {conv.message_count === 1 ? 'msg' : 'msgs'}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* More Options */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        className="opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-[var(--card)]"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <MoreVertical className="w-3.5 h-3.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40">
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleTogglePin(conv.id, !!conv.is_pinned);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        <Pin className="w-4 h-4 mr-2" />
-                        {conv.is_pinned
-                          ? (isHindi ? "अनपिन करें" : "Unpin")
-                          : (isHindi ? "पिन करें" : "Pin")}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive cursor-pointer focus:text-destructive"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteClick(conv.id);
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        {isHindi ? "हटाएं" : "Delete"}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+              <div className="space-y-2 px-1 animate-pulse">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-10 bg-white/5 rounded-xl" />
+                ))}
               </div>
-            ))
-          )}
+            ) : error ? (
+              <div className="p-4 text-center text-destructive">
+                <span className="text-xs">{isHindi ? "त्रुटि" : "Error loading chats"}</span>
+                <Button variant="link" size="sm" onClick={() => refresh()} className="text-xs h-auto p-0 ml-2">{isHindi ? "पुनः प्रयास करें" : "Retry"}</Button>
+              </div>
+            ) : conversations.length === 0 ? (
+              <div className="p-4 text-center text-[var(--text-muted)] opacity-50">
+                <span className="text-xs">{isHindi ? "कोई इतिहास नहीं" : "No history"}</span>
+              </div>
+            ) : (
+              conversations.map((conv) => (
+                <div
+                  key={conv.id}
+                  className={`
+                  group relative rounded-xl transition-all duration-200 cursor-pointer px-3 py-2.5
+                  ${currentChatId === conv.id
+                      ? "bg-white/5 text-white shadow-sm ring-1 ring-white/5"
+                      : "text-[var(--text-muted)] hover:text-white hover:bg-white/5"
+                    }
+                `}
+                  onClick={() => onSelectChat?.(conv.id)}
+                >
+                  <div className="flex items-center gap-3">
+                    {conv.is_pinned ? (
+                      <Pin className="w-3.5 h-3.5 flex-shrink-0 text-primary" />
+                    ) : (
+                      <MessageSquare
+                        className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${currentChatId === conv.id ? "text-primary" : "opacity-50"
+                          }`}
+                      />
+                    )}
+                    <span className="text-sm font-medium truncate flex-1">
+                      {conv.title}
+                    </span>
+
+                    {/* More Options */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            className="p-1 rounded-md hover:bg-white/10 transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreVertical className="w-3 h-3" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40 bg-[var(--surface-elevated)] border-[var(--border)]">
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTogglePin(conv.id, !!conv.is_pinned);
+                            }}
+                          >
+                            <Pin className="w-4 h-4 mr-2" />
+                            {conv.is_pinned ? "Unpin" : "Pin"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(conv.id);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </ScrollArea>
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-3 border-t border-[var(--border)] space-y-2.5">
-        {/* User Profile Menu */}
-        {profile && (
+      <div className="p-4 mt-auto">
+        <div className="rounded-2xl bg-white/5 p-1 border border-white/5">
           <UserProfileMenu language={language as 'en' | 'hi'} align="start" fullWidth={true} />
-        )}
-
-        {/* Theme Information */}
-        <div className="flex items-center justify-between px-1 py-0.5">
-          <span className="text-xs text-[var(--muted-foreground)] font-medium">
-            {isHindi ? "थीम" : "Theme"}
-          </span>
-          <span className="text-xs text-[var(--foreground)] font-medium">
-            Dark
-          </span>
         </div>
-
-        {/* Chat Count */}
-        <p className="text-xs text-[var(--muted-foreground)] text-center pt-1">
-          {isHindi
-            ? `${conversations.length} चैट`
-            : `${conversations.length} ${conversations.length === 1 ? 'chat' : 'chats'}`}
-        </p>
       </div>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-[var(--surface-elevated)] border-[var(--border)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {isHindi ? "चैट हटाएं?" : "Delete chat?"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle>{isHindi ? "चैट हटाएं?" : "Delete chat?"}</AlertDialogTitle>
+            <AlertDialogDescription className="text-[var(--text-muted)]">
               {isHindi
-                ? "यह चैट और सभी संदेश स्थायी रूप से हटा दिए जाएंगे। इसे पूर्ववत नहीं किया जा सकता।"
-                : "This chat and all its messages will be permanently deleted. This action cannot be undone."}
+                ? "यह चैट और सभी संदेश स्थायी रूप से हटा दिए जाएंगे।"
+                : "This chat and all its messages will be permanently deleted."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{isHindi ? "रद्द करें" : "Cancel"}</AlertDialogCancel>
+            <AlertDialogCancel className="bg-transparent border-[var(--border)] text-white hover:bg-white/5">{isHindi ? "रद्द करें" : "Cancel"}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive hover:bg-destructive/90 text-white"
             >
               {isHindi ? "हटाएं" : "Delete"}
             </AlertDialogAction>

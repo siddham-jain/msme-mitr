@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -29,6 +29,11 @@ import {
   AlertCircle,
   RefreshCw,
   WifiOff,
+  Image as ImageIcon,
+  PenTool,
+  ChevronDown,
+  LayoutGrid,
+  MoreHorizontal
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -57,12 +62,6 @@ const quickPrompts: QuickPrompt[] = [
     textHi: "PMEGP योजना के लिए आवेदन कैसे करें?",
     icon: <FileText className="w-4 h-4" />,
     category: "application",
-  },
-  {
-    text: "Women entrepreneur schemes",
-    textHi: "महिला उद्यमी योजनाएं",
-    icon: <TrendingUp className="w-4 h-4" />,
-    category: "women",
   },
 ];
 
@@ -175,9 +174,15 @@ export function ChatInterfaceStream({
   const voice = useChatVoiceInput((transcript) => {
     setInput(transcript);
     setTimeout(() => {
-      const form = document.querySelector('form') as HTMLFormElement;
-      if (form && transcript.trim()) {
-        form.requestSubmit();
+      // Logic for submitting center or bottom form
+      if (messages.length === 0) {
+        // Center form submit - manual trigger since it might not be a real form submit event
+        handleSubmit();
+      } else {
+        const form = document.querySelector('form.bottom-chat-form') as HTMLFormElement;
+        if (form && transcript.trim()) {
+          form.requestSubmit();
+        }
       }
     }, 100);
   });
@@ -196,7 +201,7 @@ export function ChatInterfaceStream({
       console.log('[ChatInterfaceStream] New chat trigger detected:', newChatTrigger);
       lastProcessedTriggerRef.current = newChatTrigger;
       isCreatingNewRef.current = true;
-      
+
       createNewConversation().then((conversationId) => {
         console.log('[ChatInterfaceStream] New conversation created:', conversationId);
         // The onConversationChange callback will be called by createNewConversation
@@ -221,10 +226,6 @@ export function ChatInterfaceStream({
 
   // Handle conversation selection from sidebar with smooth transition
   useEffect(() => {
-    // Don't switch if we're creating a new conversation
-    // Don't switch if the selected chat is already active (check both state and ref)
-    // Don't switch if already transitioning
-    // Don't switch if we already processed this selection
     if (
       selectedChatId &&
       selectedChatId !== conversation?.id &&
@@ -234,17 +235,11 @@ export function ChatInterfaceStream({
       transitionState === 'idle'
     ) {
       console.log('[ChatInterfaceStream] Switching to conversation:', selectedChatId);
-      console.log('[ChatInterfaceStream] Current conversation:', conversation?.id);
       lastSelectedChatIdRef.current = selectedChatId;
-      
-      // Use transition hook for smooth switching
+
       transitionSwitchConversation(selectedChatId, async () => {
-        // Requirement 4.4: Ensure message area loads correct history when switching
         await switchConversation(selectedChatId);
-        console.log('[ChatInterfaceStream] Conversation switched successfully');
-        console.log('[ChatInterfaceStream] Messages loaded:', messages.length);
-        
-        // Reset scroll position to bottom after switching (Requirement 6.4)
+
         setTimeout(() => {
           if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
@@ -265,18 +260,18 @@ export function ChatInterfaceStream({
     // Use requestAnimationFrame to batch DOM updates
     const resizeHandle = requestAnimationFrame(() => {
       // Reset height to initial 44px to get the correct scrollHeight
-      textarea.style.height = '44px';
-      
+      textarea.style.height = messages.length === 0 ? '112px' : '44px'; // Larger initial height for hero input
+
       // Calculate new height with max of 120px
-      const newHeight = Math.min(textarea.scrollHeight, 120);
+      const newHeight = Math.min(textarea.scrollHeight, 160);
       textarea.style.height = `${newHeight}px`;
     });
 
     return () => cancelAnimationFrame(resizeHandle);
-  }, [input]);
+  }, [input, messages.length]);
 
   // Handle submit with offline mode support and error handling
-  const handleSubmit = useCallback(async (e?: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
     e?.preventDefault();
 
     if (!input.trim() || isLoading) return;
@@ -292,7 +287,7 @@ export function ChatInterfaceStream({
     // If offline, show warning but still try to send
     if (isOfflineMode) {
       toast.info(
-        isHindi 
+        isHindi
           ? 'आप ऑफ़लाइन प्रतीत होते हैं। संदेश नहीं भेजा जा सकता।'
           : 'You appear to be offline. Message may not send.'
       );
@@ -316,7 +311,7 @@ export function ChatInterfaceStream({
 
       // Success - clear preserved input
       setPreservedInput('');
-      
+
       // Announce success
       announceToScreenReader(
         isHindi ? 'संदेश भेजा गया' : 'Message sent',
@@ -327,13 +322,13 @@ export function ChatInterfaceStream({
       console.error('Failed to send message:', err);
       setSendError(err instanceof Error ? err : new Error('Failed to send message'));
       setInput(messageToSend); // Restore input
-      
+
       // Announce error
       announceToScreenReader(
         isHindi ? 'संदेश भेजने में विफल' : 'Failed to send message',
         'assertive'
       );
-      
+
       // Show toast with user-friendly message
       toast.error(getUserFriendlyErrorMessage(err, language));
     }
@@ -361,12 +356,9 @@ export function ChatInterfaceStream({
     setInput(prompt);
     // Trigger form submission programmatically
     setTimeout(() => {
-      const form = document.querySelector('form') as HTMLFormElement;
-      if (form) {
-        form.requestSubmit();
-      }
+      handleSubmit();
     }, 0);
-  }, [setInput]);
+  }, [setInput, handleSubmit]);
 
   // Handle retry for failed messages
   const handleRetry = useCallback(() => {
@@ -374,335 +366,236 @@ export function ChatInterfaceStream({
       setInput(preservedInput);
       setSendError(null);
       setFailedMessageId(null);
-      
+
       // Trigger form submission
       setTimeout(() => {
-        const form = document.querySelector('form') as HTMLFormElement;
-        if (form) {
-          form.requestSubmit();
-        }
+        handleSubmit();
       }, 0);
     }
-  }, [preservedInput, setInput]);
+  }, [preservedInput, setInput, handleSubmit]);
 
   return (
     <div className="flex flex-col h-full bg-[var(--background)] relative">
-      {/* Loading Overlay - shown during conversation transitions */}
+      {/* Loading Overlay */}
       {(transitionState === 'loading' || transitionState === 'transitioning') && (
-        <div 
+        <div
           className="absolute inset-0 bg-[#0A0A0F]/90 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
           role="status"
           aria-live="polite"
-          aria-label={isHindi ? 'बातचीत लोड हो रही है' : 'Loading conversation'}
         >
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-[#F59E0B]" aria-hidden="true" />
             <p className="text-sm text-[#71717A] font-medium">
-              {isHindi ? 'बातचीत लोड हो रही है...' : 'Loading conversation...'}
+              {isHindi ? 'लोड हो रहा है...' : 'Loading...'}
             </p>
           </div>
         </div>
       )}
 
-      {/* Error Overlay - shown when transition fails */}
-      {transitionState === 'error' && transitionError && (
-        <div 
-          className="absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-200"
-          role="alert"
-          aria-live="assertive"
-        >
-          <Card className="max-w-md mx-4 border-destructive/30 shadow-lg">
-            <div className="p-6 space-y-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-destructive text-base">
-                    {isHindi ? 'बातचीत लोड नहीं हो सकी' : 'Failed to load conversation'}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
-                    {transitionError.message || (isHindi ? 'कुछ गलत हो गया' : 'Something went wrong')}
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-hidden flex flex-col items-center">
+        <ScrollArea className="w-full h-full" ref={scrollAreaRef}>
+          <div className="w-full min-h-full flex flex-col">
+
+            {/* HERO SECTION / EMPTY STATE */}
+            {messages.length === 0 && (
+              <div className="flex-1 flex flex-col items-center justify-center py-20 px-6 max-w-4xl mx-auto w-full">
+                {/* Hero Title */}
+                <div className="stagger-reveal text-center mb-10">
+                  <h1 className="text-4xl lg:text-5xl font-semibold tracking-tight mb-4 text-white">
+                    {isHindi ? "MSME मित्र में आपका स्वागत है" : "Welcome to MSME Mitr"}
+                  </h1>
+                  <p className="text-[var(--text-muted)] text-lg max-w-lg mx-auto">
+                    {isHindi
+                      ? "सरकारी योजनाओं और व्यवसाय ऋण के लिए आपका AI सहायक"
+                      : "Your AI Assistant for Government Schemes & Business Loans"}
                   </p>
                 </div>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  onClick={retryTransition}
-                  className="flex-1"
-                  size="default"
-                  aria-label={isHindi ? 'पुनः प्रयास करें' : 'Retry loading conversation'}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  {isHindi ? 'पुनः प्रयास करें' : 'Retry'}
-                </Button>
-                <Button
-                  onClick={() => {
-                    // Reset transition state and stay on current conversation
-                    window.location.reload();
-                  }}
-                  variant="outline"
-                  className="flex-1"
-                  size="default"
-                  aria-label={isHindi ? 'रद्द करें' : 'Cancel'}
-                >
-                  {isHindi ? 'रद्द करें' : 'Cancel'}
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-      )}
 
-      {/* Scrollable Messages Area - grows to fill space */}
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="py-8">
-            {/* Offline Mode Message */}
-            <div className="px-4">
-              <OfflineModeMessage />
-            </div>
+                {/* Status Pill (Mock for Zen aesthetic) */}
 
-            {/* Welcome Message - shown when no messages */}
-            {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center min-h-[50vh] text-center animate-fade-in px-6">
-                <h1 className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-[var(--foreground)] mb-4">
-                  {isHindi ? "MSME मित्र में आपका स्वागत है" : "Welcome to MSME Mitr"}
-                </h1>
-                <p 
-                  className="text-[var(--muted-foreground)] text-lg mx-auto" 
-                  style={{ 
-                    maxWidth: '600px',
-                    whiteSpace: 'normal',
-                    wordBreak: 'normal',
-                    display: 'block',
-                    width: '100%'
-                  }}
-                >
-                  {isHindi 
-                    ? "सरकारी योजनाओं और व्यवसाय सहायता के लिए आपका AI सहायक"
-                    : "Your AI assistant for government schemes and business support"}
-                </p>
+
+                {/* CENTER INPUT - ZEN STYLE */}
+                <div className="stagger-reveal w-full max-w-2xl mx-auto mb-16 relative z-10">
+                  <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[32px] overflow-hidden soft-shadow input-focus transition-all duration-500 group focus-within:ring-1 focus-within:ring-primary/30">
+                    <div className="p-6 pb-2 text-left">
+                      <Textarea
+                        ref={messages.length === 0 ? textareaRef : null}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder={isHindi ? "आप क्या बनाना चाहते हैं..." : "Describe what you want to achieve..."}
+                        className="w-full bg-transparent border-none focus:ring-0 text-xl resize-none h-20 placeholder:text-neutral-600 font-light focus-visible:ring-0 p-0 shadow-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between px-6 py-4 bg-white/[0.02] border-t border-[var(--border)]">
+                      <div className="flex items-center gap-3">
+                        <Button variant="ghost" size="icon-sm" className="text-[var(--text-muted)] hover:text-white transition-colors">
+                          <ImageIcon className="w-5 h-5" />
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        {voice.isRecording && (
+                          <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 rounded-full border border-red-500/20">
+                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            <span className="text-xs text-red-400 font-medium">{voice.duration}</span>
+                          </div>
+                        )}
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={voice.toggleVoiceMode}
+                          className={`rounded-full w-10 h-10 transition-colors ${voice.isRecording ? 'bg-red-500/10 text-red-400 hover:bg-red-500/20' : 'hover:bg-white/5 text-[var(--text-muted)]'}`}
+                        >
+                          {voice.isTranscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : voice.isRecording ? <Square className="w-4 h-4 fill-current" /> : <Mic className="w-5 h-5" />}
+                        </Button>
+
+                        <Button
+                          onClick={() => handleSubmit()}
+                          disabled={!input.trim() || isLoading}
+                          className={`rounded-full w-10 h-10 flex items-center justify-center transition-all duration-300 ${input.trim() ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(96,165,250,0.3)]' : 'bg-white/5 text-neutral-500'}`}
+                        >
+                          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* RECENT PROJECTS GRID (Mock for aesthetics) */}
+                <div className="stagger-reveal w-full max-w-5xl mx-auto px-4">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-sm font-medium text-white/90">{isHindi ? "सुझाव" : "Suggestions"}</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {quickPrompts.map((prompt, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => handleQuickPrompt(isHindi && prompt.textHi ? prompt.textHi : prompt.text)}
+                        className="group cursor-pointer rounded-[24px] bg-[var(--surface)] border border-[var(--border)] p-1 hover:border-white/10 hover:bg-[var(--surface-elevated)] transition-all duration-300"
+                      >
+                        <div className="bg-neutral-900/30 rounded-[20px] p-5 h-32 flex flex-col justify-between group-hover:bg-neutral-900/50 transition-colors relative overflow-hidden">
+                          <div className="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                            <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                              <div className="text-white/70">{prompt.icon}</div>
+                            </div>
+                          </div>
+                          <h3 className="text-sm font-medium text-[var(--text-muted)] group-hover:text-white transition-colors pr-8 leading-relaxed">
+                            {isHindi && prompt.textHi ? prompt.textHi : prompt.text}
+                          </h3>
+                          <div className="flex items-center gap-2 text-[10px] text-neutral-600 font-medium uppercase tracking-wider">
+                            <span>{prompt.category}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
-            <div className="space-y-6 pb-4 px-4 max-w-4xl mx-auto">
-              {messages.map((message, index) => (
-                <MessageBubble
-                  key={message.id}
-                  role={message.role as "user" | "assistant"}
-                  content={getMessageText(message)}
-                  isStreaming={isLoading && index === messages.length - 1 && message.role === 'assistant'}
-                />
-              ))}
-
-              {/* Inline error display with retry button */}
-              {(error || sendError) && (
-                <Card className="bg-destructive/10 border-destructive/30 p-4 shadow-sm animate-slide-in">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <div className="flex-1 space-y-3">
-                      <div>
-                        <p className="text-sm font-semibold text-destructive mb-1.5">
-                          {isHindi ? 'संदेश भेजने में विफल' : 'Failed to send message'}
-                        </p>
-                        <p className="text-sm text-destructive/90 leading-relaxed">
-                          {getUserFriendlyErrorMessage(sendError || error, language)}
-                        </p>
+            {/* VISIBLE MESSAGES */}
+            {messages.length > 0 && (
+              <div className="flex-1 w-full max-w-4xl mx-auto px-4 pb-4">
+                <div className="space-y-6 pt-6">
+                  {messages.map((message, index) => (
+                    <MessageBubble
+                      key={message.id}
+                      role={message.role as "user" | "assistant"}
+                      content={getMessageText(message)}
+                      isStreaming={isLoading && index === messages.length - 1 && message.role === 'assistant'}
+                    />
+                  ))}
+                  {(error || sendError) && (
+                    <Card className="bg-destructive/10 border-destructive/30 p-4 shadow-sm animate-slide-in">
+                      <div className="flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-destructive mb-1">
+                            {isHindi ? 'संदेश भेजने में विफल' : 'Failed to send message'}
+                          </p>
+                          <p className="text-sm text-destructive/90">
+                            {getUserFriendlyErrorMessage(sendError || error, language)}
+                          </p>
+                          {preservedInput && (
+                            <Button onClick={handleRetry} size="sm" variant="outline" className="mt-2 border-destructive/40 text-destructive hover:bg-destructive/15">
+                              <RefreshCw className="w-4 h-4 mr-2" />
+                              {isHindi ? 'पुनः प्रयास करें' : 'Retry'}
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                      
-                      {/* Retry button */}
-                      {preservedInput && (
-                        <Button
-                          onClick={handleRetry}
-                          size="sm"
-                          variant="outline"
-                          className="border-destructive/40 text-destructive hover:bg-destructive/15 transition-colors"
-                          aria-label={isHindi ? 'संदेश पुनः भेजें' : 'Retry sending message'}
-                        >
-                          <RefreshCw className="w-4 h-4 mr-2" aria-hidden="true" />
-                          {isHindi ? 'पुनः प्रयास करें' : 'Retry'}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              )}
-
-              {/* Offline indicator in messages area */}
-              {isOfflineMode && messages.length > 0 && (
-                <Card className="bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800 p-3 shadow-sm animate-slide-in">
-                  <div className="flex items-center gap-2.5">
-                    <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" aria-hidden="true" />
-                    <p className="text-sm text-yellow-800 dark:text-yellow-200 leading-relaxed">
-                      {isHindi 
-                        ? 'आप ऑफ़लाइन हैं। संदेश भेजने में समस्या हो सकती है।'
-                        : 'You are offline. Messages may not send.'}
-                    </p>
-                  </div>
-                </Card>
-              )}
-
-              {/* Scroll anchor */}
-              <div ref={messagesEndRef} />
-            </div>
+                    </Card>
+                  )}
+                  <div ref={messagesEndRef} className="h-4" />
+                </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </div>
 
-      {/* Quick Prompts - shown below welcome message when no messages */}
-      {messages.length === 0 && (
-        <div className="flex-shrink-0 px-4 pb-6 animate-fade-in" role="region" aria-label={isHindi ? "त्वरित प्रश्न" : "Quick questions"}>
-          <div className="w-full max-w-3xl mx-auto">
-            <p className="text-xs text-[var(--muted-foreground)] text-center mb-4 uppercase tracking-wide">
-              {isHindi ? "त्वरित प्रश्न" : "Quick questions"}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {quickPrompts.map((prompt, idx) => (
-                <button
-                  key={idx}
-                  className="flex items-center gap-3 p-4 text-left bg-[var(--card)] backdrop-blur-[8px] border border-[var(--border)] rounded-lg transition-all duration-200 hover:border-[var(--border-hover)] hover:bg-[rgba(26,26,36,0.8)]"
-                  onClick={() =>
-                    handleQuickPrompt(
-                      isHindi && prompt.textHi ? prompt.textHi : prompt.text
-                    )
-                  }
-                  disabled={isLoading}
-                  aria-label={`${isHindi ? "त्वरित प्रश्न" : "Quick question"}: ${isHindi && prompt.textHi ? prompt.textHi : prompt.text}`}
-                  tabIndex={0}
-                >
-                  <span className="text-[var(--muted-foreground)]" aria-hidden="true">{prompt.icon}</span>
-                  <span className="text-sm text-[var(--foreground)]">
-                    {isHindi && prompt.textHi ? prompt.textHi : prompt.text}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Fixed Input Area - stays at bottom */}
-      <form 
-        onSubmit={handleSubmit} 
-        className="flex-shrink-0 border-t border-[var(--border)] bg-[var(--background)] p-4 safe-bottom"
-        aria-label={isHindi ? "संदेश फॉर्म" : "Message form"}
-        style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-      >
-        <div className="flex gap-3 items-end max-w-4xl mx-auto">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="flex-shrink-0"
-            onClick={() => toast.info('File attachment coming soon!')}
-            aria-label={isHindi ? "फ़ाइल संलग्न करें" : "Attach file"}
-            disabled={isLoading}
-            tabIndex={0}
-          >
-            <Paperclip className="w-5 h-5" />
-          </Button>
-
-          <div className="flex-1 relative">
-            <Textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={
-                isHindi
-                  ? "संदेश लिखें..."
-                  : "Message MSME Mitr..."
-              }
-              className="pr-12 min-h-[44px] max-h-[120px] text-sm resize-none overflow-y-auto transition-[height] duration-100"
-              style={{ height: '44px' }}
-              disabled={isLoading}
-              aria-label={isHindi ? "संदेश इनपुट" : "Message input"}
-              aria-describedby="message-hint"
-              rows={1}
-              tabIndex={0}
-            />
+      {/* FIXED BOTTOM INPUT - Visible only when messages exist */}
+      {messages.length > 0 && (
+        <form
+          onSubmit={handleSubmit}
+          className="flex-shrink-0 border-t border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl p-4 safe-bottom bottom-chat-form transition-all duration-300"
+          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
+        >
+          <div className="flex gap-3 items-end max-w-4xl mx-auto">
             <Button
               type="button"
               variant="ghost"
-              size="icon-sm"
-              className={`absolute right-2 top-1/2 -translate-y-1/2 transition-all duration-200 ${
-                voice.isRecording ? 'bg-red-500/15 hover:bg-red-500/20' : ''
-              }`}
-              onClick={voice.toggleVoiceMode}
-              aria-label={
-                voice.isRecording 
-                  ? (isHindi ? "रिकॉर्डिंग बंद करें" : "Stop recording")
-                  : (isHindi ? "रिकॉर्डिंग शुरू करें" : "Start recording")
-              }
-              aria-pressed={voice.isRecording}
-              disabled={isLoading || voice.isTranscribing}
-              tabIndex={0}
-            >
-              {voice.isTranscribing ? (
-                <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-              ) : voice.isRecording ? (
-                <Square className="w-4 h-4 text-red-500" aria-hidden="true" />
-              ) : (
-                <Mic className="w-5 h-5" aria-hidden="true" />
-              )}
-            </Button>
-            {/* Voice recording indicator */}
-            {voice.isRecording && (
-              <div 
-                className="absolute -top-8 right-0 bg-red-500 text-white text-xs px-2.5 py-1 rounded-full animate-pulse shadow-md font-medium"
-                role="status"
-                aria-live="polite"
-              >
-                {isHindi ? `रिकॉर्डिंग ${voice.duration}` : `Recording ${voice.duration}`}
-              </div>
-            )}
-          </div>
-
-          {isLoading ? (
-            <Button
-              type="button"
-              onClick={() => {
-                stop();
-                announceToScreenReader(
-                  isHindi ? 'संदेश रोका गया' : 'Message stopped',
-                  'polite'
-                );
-              }}
-              className="flex-shrink-0 btn-touch px-4 transition-all duration-200"
-              variant="destructive"
-              aria-label={isHindi ? "संदेश रोकें" : "Stop message"}
-              tabIndex={0}
-            >
-              {isHindi ? "रोकें" : "Stop"}
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              disabled={!input.trim() || isLoading}
               size="icon"
-              className="flex-shrink-0 transition-all duration-200"
-              aria-label={isHindi ? "संदेश भेजें" : "Send message"}
-              aria-disabled={!input.trim() || isLoading}
-              tabIndex={0}
+              className="flex-shrink-0 rounded-full w-10 h-10"
+              onClick={() => toast.info('Image upload coming soon!')}
+              disabled={isLoading}
             >
-              <Send className="w-5 h-5" aria-hidden="true" />
-              <span className="sr-only">
-                {isHindi ? "संदेश भेजें" : "Send message"}
-              </span>
+              <ImageIcon className="w-5 h-5" />
             </Button>
-          )}
-        </div>
 
-        {/* Language Hint */}
-        <p 
-          id="message-hint" 
-          className="text-xs text-[var(--muted-foreground)] text-center mt-3 max-w-4xl mx-auto"
-          aria-live="polite"
-        >
-          {isHindi
-            ? "12 भाषाओं में बात करें"
-            : "Chat in 12 languages"}
-        </p>
-      </form>
+            <div className="flex-1 relative bg-[var(--surface)] border border-[var(--border)] rounded-[24px] focus-within:ring-1 focus-within:ring-primary/50 transition-all">
+              <Textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={isHindi ? "संदेश लिखें..." : "Message MSME Mitr..."}
+                className="w-full bg-transparent border-none focus-visible:ring-0 min-h-[44px] max-h-[120px] text-sm resize-none overflow-y-auto py-3 px-4"
+                rows={1}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className={`rounded-full w-10 h-10 ${voice.isRecording ? 'bg-red-500/10 text-red-500' : ''}`}
+                onClick={voice.toggleVoiceMode}
+                disabled={isLoading || voice.isTranscribing}
+              >
+                {voice.isTranscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : voice.isRecording ? <Square className="w-4 h-4 fill-current" /> : <Mic className="w-5 h-5" />}
+              </Button>
+
+              {isLoading ? (
+                <Button type="button" onClick={() => stop()} variant="destructive" size="icon" className="rounded-full w-10 h-10">
+                  <Square className="w-4 h-4 fill-current" />
+                </Button>
+              ) : (
+                <Button type="submit" disabled={!input.trim()} size="icon" className="rounded-full w-10 h-10 bg-primary hover:bg-primary/90 text-white">
+                  <Send className="w-5 h-5" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
