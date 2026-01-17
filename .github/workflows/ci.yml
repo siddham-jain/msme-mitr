@@ -57,15 +57,7 @@ jobs:
           npm audit --audit-level=moderate --omit=dev || true
           
       - name: Check for high/critical vulnerabilities
-        run: |
-          AUDIT_OUTPUT=$(npm audit --audit-level=high --omit=dev --json || true)
-          if echo "$AUDIT_OUTPUT" | grep -q '"vulnerabilities":{[^}]*"high"\|"critical"'; then
-            echo "High or Critical vulnerabilities found"
-            npm audit --audit-level=high --omit=dev
-            exit 1
-          else
-            echo "No high/critical vulnerabilities found"
-          fi
+        run: npm audit --audit-level=high --omit=dev
 
       # Stage 7: Unit Tests
       - name: Run unit tests
