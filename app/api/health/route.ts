@@ -6,7 +6,7 @@ import { schemeDataService } from '@/services/schemes/schemeDataService';
  * Health Check Endpoint
  * Returns the status of various services
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const schemes = await schemeDataService.getAllSchemes();
     const cacheStats = schemeDataService.getCacheStats();
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
         'X-Health-Check': 'ok'
       }
     });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       {
         status: 'unhealthy',

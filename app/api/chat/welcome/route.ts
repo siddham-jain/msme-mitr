@@ -44,6 +44,7 @@ Be natural, friendly, and concise.`,
       language
     });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Welcome message generation error:', error);
 
@@ -63,7 +64,7 @@ Be natural, friendly, and concise.`,
 /**
  * OPTIONS request for CORS
  */
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS(_request: NextRequest) {
   return new Response(null, {
     status: 200,
     headers: {
