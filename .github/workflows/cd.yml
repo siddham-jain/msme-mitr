@@ -25,7 +25,8 @@ jobs:
       # 2. Update the deployment manifest with the actual image
       - name: Update Image in Deployment Manifest
         run: |
-          sed -i "s|DOCKER_IMAGE_NAME_PLACEHOLDER|${{ secrets.DOCKERHUB_USERNAME }}/msme-mitr:${{ github.sha }}|g" k8s/deployment.yaml
+          # Use head_sha to get the commit that triggered the CI
+          sed -i "s|DOCKER_IMAGE_NAME_PLACEHOLDER|${{ secrets.DOCKERHUB_USERNAME }}/msme-mitr:${{ github.event.workflow_run.head_sha }}|g" k8s/deployment.yaml
           cat k8s/deployment.yaml
 
       # 3. Deploy to Kubernetes
@@ -50,8 +51,9 @@ jobs:
           sleep 10
 
       - name: Run OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: 'http://localhost:8080'
           fail_action: false 
           allow_issue_writing: false
+          artifact_name: 'zap-scan-report'
