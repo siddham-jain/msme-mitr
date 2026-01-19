@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: msme-mitr-service
+spec:
+  type: NodePort
+  selector:
+    app: msme-mitr
+  ports:
+    - protocol: TCP
+      port: 80         # The internal service port
+      targetPort: 3000 # The container port
+      nodePort: 30007  # Static port for easier access during testing

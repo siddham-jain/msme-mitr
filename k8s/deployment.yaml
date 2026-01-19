@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msme-mitr-deployment
+  labels:
+    app: msme-mitr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: msme-mitr
+  template:
+    metadata:
+      labels:
+        app: msme-mitr
+    spec:
+      containers:
+        - name: msme-mitr-container
+          image: DOCKER_IMAGE_NAME_PLACEHOLDER
+          imagePullPolicy: Always 
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10

@@ -1,0 +1,57 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 1. Create a local Kubernetes cluster (Kind)
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: kind
+
+      # 2. Update the deployment manifest with the actual image
+      - name: Update Image in Deployment Manifest
+        run: |
+          sed -i "s|DOCKER_IMAGE_NAME_PLACEHOLDER|${{ secrets.DOCKERHUB_USERNAME }}/msme-mitr:${{ github.sha }}|g" k8s/deployment.yaml
+          cat k8s/deployment.yaml
+
+      # 3. Deploy to Kubernetes
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/deployment.yaml
+
+      # 4. Wait for Rollout (Verification)
+      - name: Wait for Rollout to obtain status
+        run: |
+          kubectl rollout status deployment/msme-mitr-deployment --timeout=120s
+          kubectl get pods -o wide
+          kubectl get services
+
+      # 5. DAST Scan (OWASP ZAP)
+      - name: Port Forward for DAST
+        run: |
+          # Forward the service port using kubectl so localhost:8080 maps to the service
+          kubectl port-forward svc/msme-mitr-service 8080:80 &
+          # Wait for port forward to establish
+          sleep 10
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'http://localhost:8080'
+          fail_action: false 
+          allow_issue_writing: false
