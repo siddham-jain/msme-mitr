@@ -96,7 +96,7 @@ async function testNormalizationFunctions() {
   // Test location normalization
   console.log('\n📍 Location Normalization:');
   console.log('-'.repeat(60));
-  
+
   const locationTests = [
     ['Mumbai', 'Mumbai'],
     ['Bombay', 'Mumbai'],
@@ -116,7 +116,7 @@ async function testNormalizationFunctions() {
   // Test industry normalization
   console.log('\n🏭 Industry Normalization:');
   console.log('-'.repeat(60));
-  
+
   const industryTests = [
     ['textile', 'Manufacturing - Textiles'],
     ['kapde', 'Manufacturing - Textiles'],
@@ -138,7 +138,7 @@ async function testNormalizationFunctions() {
   // Test business size normalization
   console.log('\n📏 Business Size Normalization:');
   console.log('-'.repeat(60));
-  
+
   const sizeTests = [
     { input: { size: null, employees: 5, turnover: null }, expected: 'Micro' },
     { input: { size: null, employees: 15, turnover: null }, expected: 'Small' },
@@ -152,8 +152,8 @@ async function testNormalizationFunctions() {
 
   sizeTests.forEach(({ input, expected }) => {
     const result = normalizeBusinessSize(
-      input.size, 
-      input.employees ?? undefined, 
+      input.size,
+      input.employees ?? undefined,
       input.turnover ?? undefined
     );
     const status = result === expected ? '✅' : '❌';
@@ -164,7 +164,7 @@ async function testNormalizationFunctions() {
   // Test currency normalization
   console.log('\n💰 Currency Normalization:');
   console.log('-'.repeat(60));
-  
+
   const currencyTests = [
     ['50 lakh', 5000000],
     ['5 crore', 50000000],
@@ -184,7 +184,7 @@ async function testNormalizationFunctions() {
   // Test language detection
   console.log('\n🌐 Language Detection:');
   console.log('-'.repeat(60));
-  
+
   const languageTests = [
     {
       messages: [{ role: 'user', content: 'Hello, I need help' }],
@@ -219,7 +219,7 @@ async function testSampleConversations() {
   for (const sample of SAMPLE_CONVERSATIONS) {
     console.log(`\n📝 Test: ${sample.name}`);
     console.log('-'.repeat(60));
-    
+
     console.log('Conversation:');
     sample.messages.forEach((msg, idx) => {
       const preview = msg.content.substring(0, 60);
@@ -285,8 +285,8 @@ async function checkEnvironmentSetup() {
       required: true
     },
     {
-      name: 'Supabase Anon Key',
-      value: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? '✓ Set' : undefined,
+      name: 'Supabase Publishable Key',
+      value: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ? '✓ Set' : undefined,
       required: true
     }
   ];
@@ -297,21 +297,21 @@ async function checkEnvironmentSetup() {
     const status = check.value ? '✅' : (check.required ? '❌' : '⚠️');
     const displayValue = check.value || 'Not set';
     console.log(`${status} ${check.name}: ${displayValue}`);
-    
+
     if (check.required && !check.value) {
       allGood = false;
     }
   });
 
   console.log('\n' + '='.repeat(60));
-  
+
   if (allGood) {
     console.log('✅ ENVIRONMENT SETUP COMPLETE');
   } else {
     console.log('❌ ENVIRONMENT SETUP INCOMPLETE');
     console.log('\nPlease set the required environment variables in your .env file');
   }
-  
+
   console.log('='.repeat(60));
 
   return allGood;
@@ -330,7 +330,7 @@ async function runAllTests() {
   try {
     // Check environment
     const envOk = await checkEnvironmentSetup();
-    
+
     if (!envOk) {
       console.log('\n⚠️  Some environment variables are missing.');
       console.log('The tests will continue, but AI extraction may not work.\n');
@@ -356,12 +356,12 @@ async function runAllTests() {
     console.error('\n❌ TEST SUITE FAILED');
     console.error('='.repeat(60));
     console.error('Error:', error);
-    
+
     if (error instanceof Error) {
       console.error('Message:', error.message);
       console.error('Stack:', error.stack);
     }
-    
+
     process.exit(1);
   }
 }

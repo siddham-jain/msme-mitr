@@ -25,11 +25,11 @@ export type AnalyticsClient = SupabaseClient<Database>;
  */
 export function createAnalyticsClient(): AnalyticsClient {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
     throw new Error(
-      'Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'
+      'Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY'
     );
   }
 

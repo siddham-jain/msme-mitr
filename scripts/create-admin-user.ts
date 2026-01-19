@@ -18,7 +18,7 @@
  * Environment Variables:
  *   ADMIN_EMAIL - Default admin email (optional)
  *   NEXT_PUBLIC_SUPABASE_URL - Supabase project URL
- *   SUPABASE_SERVICE_ROLE_KEY - Service role key (required for admin operations)
+ *   SUPABASE_SECRET_KEY - Secret key (required for admin operations)
  */
 
 // Load environment variables from .env.local
@@ -37,7 +37,7 @@ import type { Database, UserProfile, UserProfileInsert, UserProfileUpdate } from
 // ============================================================================
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY!
 const defaultAdminEmail = process.env.ADMIN_EMAIL
 
 // ============================================================================
@@ -67,7 +67,7 @@ async function createAdminUser() {
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('❌ Missing required environment variables:')
     if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL')
-    if (!supabaseServiceKey) console.error('  - SUPABASE_SERVICE_ROLE_KEY')
+    if (!supabaseServiceKey) console.error('  - SUPABASE_SECRET_KEY')
     console.error('\nPlease set these in your .env.local file')
     process.exit(1)
   }
@@ -99,9 +99,9 @@ async function createAdminUser() {
 
     // Step 1: Check if user exists in auth.users
     console.log('1️⃣  Checking if user exists in auth system...')
-    
+
     const { data: { users }, error: listError } = await supabase.auth.admin.listUsers()
-    
+
     if (listError) {
       console.error('❌ Failed to list users:', listError.message)
       process.exit(1)
@@ -120,7 +120,7 @@ async function createAdminUser() {
 
     // Step 2: Check if user profile exists
     console.log('\n2️⃣  Checking user profile...')
-    
+
     const profileQuery = await supabase
       .from('user_profiles')
       .select('*')
@@ -137,7 +137,7 @@ async function createAdminUser() {
 
     if (!profile) {
       console.log('⚠️  Profile not found, creating...')
-      
+
       // Create profile with admin role
       const newProfile: UserProfileInsert = {
         id: authUser.id,
@@ -170,7 +170,7 @@ async function createAdminUser() {
       }
 
       console.log('\n3️⃣  Updating role to admin...')
-      
+
       const updateData: UserProfileUpdate = {
         role: 'admin'
       }
@@ -192,7 +192,7 @@ async function createAdminUser() {
 
     // Step 3: Verify the change
     console.log('\n4️⃣  Verifying admin access...')
-    
+
     const verifyQuery = await supabase
       .from('user_profiles')
       .select('id, email, role')

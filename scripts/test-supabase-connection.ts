@@ -14,7 +14,7 @@ import * as path from 'path'
 dotenv.config({ path: path.join(process.cwd(), '.env.local') })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('❌ Missing Supabase credentials in .env.local')
@@ -37,7 +37,7 @@ async function testConnection() {
       .select('count')
       .limit(1)
     const duration1 = Date.now() - start1
-    
+
     if (healthError) {
       console.log(`❌ Failed (${duration1}ms):`, healthError.message)
     } else {
@@ -53,7 +53,7 @@ async function testConnection() {
       .select('id, email, role')
       .limit(5)
     const duration2 = Date.now() - start2
-    
+
     if (profileError) {
       console.log(`❌ Failed (${duration2}ms):`, profileError.message)
     } else {
@@ -74,7 +74,7 @@ async function testConnection() {
       .from('conversations')
       .select('*', { count: 'exact', head: true })
     const duration3 = Date.now() - start3
-    
+
     if (convError) {
       console.log(`❌ Failed (${duration3}ms):`, convError.message)
     } else {
@@ -97,7 +97,7 @@ async function testConnection() {
       rlsError = null
     }
     const duration4 = Date.now() - start4
-    
+
     if (rlsError) {
       console.log(`⚠️  Could not check RLS status (${duration4}ms)`)
     } else {
@@ -109,9 +109,9 @@ async function testConnection() {
     console.log('═══════════════════════════════════════')
     console.log('Summary:')
     console.log('═══════════════════════════════════════')
-    
+
     const avgDuration = (duration1 + duration2 + duration3) / 3
-    
+
     if (avgDuration < 500) {
       console.log('✅ Connection is FAST (avg:', Math.round(avgDuration), 'ms)')
     } else if (avgDuration < 2000) {

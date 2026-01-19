@@ -26,7 +26,7 @@ import type { Database } from '@/types/database'
 // ============================================================================
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY!
 
 // ============================================================================
 // Helper Functions
@@ -55,7 +55,7 @@ async function verifyAdminUser() {
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('❌ Missing required environment variables:')
     if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL')
-    if (!supabaseServiceKey) console.error('  - SUPABASE_SERVICE_ROLE_KEY')
+    if (!supabaseServiceKey) console.error('  - SUPABASE_SECRET_KEY')
     console.error('\nPlease set these in your .env.local file')
     process.exit(1)
   }
@@ -80,9 +80,9 @@ async function verifyAdminUser() {
 
     // Step 1: Check if user exists in auth.users
     console.log('1️⃣  Checking auth.users table...')
-    
+
     const { data: { users }, error: listError } = await supabase.auth.admin.listUsers()
-    
+
     if (listError) {
       console.error('❌ Failed to list users:', listError.message)
       process.exit(1)
@@ -105,7 +105,7 @@ async function verifyAdminUser() {
 
     // Step 2: Check if user profile exists
     console.log('\n2️⃣  Checking user_profiles table...')
-    
+
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('*')
@@ -132,9 +132,9 @@ async function verifyAdminUser() {
 
     // Step 3: Verify admin role
     console.log('\n3️⃣  Verifying admin access...')
-    
+
     const isAdmin = profile.role === 'admin' || profile.role === 'super_admin'
-    
+
     if (!isAdmin) {
       console.log(`❌ User does not have admin role (current role: ${profile.role})`)
       console.log('\nPromote to admin using:')

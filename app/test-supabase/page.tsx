@@ -212,7 +212,7 @@ export default function TestSupabasePage() {
           <h2 className="text-xl font-semibold mb-4">Environment</h2>
           <div className="space-y-2 text-sm font-mono">
             <div>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL}</div>
-            <div>Anon Key: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 20)}...</div>
+            <div>Publishable Key: {process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.substring(0, 20)}...</div>
           </div>
         </div>
 

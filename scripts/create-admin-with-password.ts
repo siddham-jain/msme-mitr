@@ -26,7 +26,7 @@ import type { Database, UserProfileInsert } from '@/types/database'
 // ============================================================================
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY!
 
 // ============================================================================
 // Helper Functions
@@ -55,7 +55,7 @@ async function createAdminWithPassword() {
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('❌ Missing required environment variables:')
     if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL')
-    if (!supabaseServiceKey) console.error('  - SUPABASE_SERVICE_ROLE_KEY')
+    if (!supabaseServiceKey) console.error('  - SUPABASE_SECRET_KEY')
     console.error('\nPlease set these in your .env.local file')
     process.exit(1)
   }
@@ -95,9 +95,9 @@ async function createAdminWithPassword() {
 
     // Step 1: Check if user already exists
     console.log('1️⃣  Checking if user already exists...')
-    
+
     const { data: { users }, error: listError } = await supabase.auth.admin.listUsers()
-    
+
     if (listError) {
       console.error('❌ Failed to list users:', listError.message)
       process.exit(1)
@@ -108,7 +108,7 @@ async function createAdminWithPassword() {
     if (existingUser) {
       console.log(`⚠️  User ${email} already exists with ID: ${existingUser.id}`)
       console.log('\n2️⃣  Updating to admin role...')
-      
+
       // Update existing user to admin
       const { error: updateError } = await (supabase
         .from('user_profiles') as any)
@@ -131,7 +131,7 @@ async function createAdminWithPassword() {
     // Step 2: Create new user
     console.log('✅ User does not exist, creating new user...')
     console.log('\n2️⃣  Creating user in auth system...')
-    
+
     const { data: authData, error: createError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -155,7 +155,7 @@ async function createAdminWithPassword() {
 
     // Step 3: Create user profile with admin role
     console.log('\n3️⃣  Creating admin profile...')
-    
+
     const newProfile: UserProfileInsert = {
       id: authData.user.id,
       email: authData.user.email!,
@@ -172,7 +172,7 @@ async function createAdminWithPassword() {
       // Check if profile already exists
       if (insertError.code === '23505') {
         console.log('⚠️  Profile already exists, updating role...')
-        
+
         const { error: updateError } = await (supabase
           .from('user_profiles') as any)
           .update({ role: 'admin' })
@@ -182,15 +182,15 @@ async function createAdminWithPassword() {
           console.error('❌ Failed to update profile:', updateError.message)
           process.exit(1)
         }
-        
+
         console.log('✅ Profile updated to admin role')
       } else {
         console.error('❌ Failed to create profile:', insertError.message)
         console.error('   Attempting to delete auth user...')
-        
+
         // Cleanup: delete the auth user if profile creation failed
         await supabase.auth.admin.deleteUser(authData.user.id)
-        
+
         process.exit(1)
       }
     } else {
@@ -201,7 +201,7 @@ async function createAdminWithPassword() {
 
     // Step 4: Verify the creation
     console.log('\n4️⃣  Verifying admin access...')
-    
+
     const { data: verifyData, error: verifyError } = await supabase
       .from('user_profiles')
       .select('id, email, role')

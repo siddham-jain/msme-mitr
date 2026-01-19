@@ -69,10 +69,10 @@ jobs:
         env:
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
 
       # Stage 9: Docker Build
       - name: Set up Docker Buildx
@@ -94,6 +94,12 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/msme-mitr:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+            SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}
+            OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
+            DEEPGRAM_API_KEY=${{ secrets.DEEPGRAM_API_KEY }}
 
       # Stage 10: Container Image Scan (Trivy)
       - name: Run Trivy vulnerability scanner
@@ -106,6 +112,8 @@ jobs:
           severity: CRITICAL,HIGH
           # For a strict security gate, set exit-code to 1 instead of 0
           exit-code: '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v4
@@ -148,6 +156,12 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/msme-mitr:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+            SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}
+            OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
+            DEEPGRAM_API_KEY=${{ secrets.DEEPGRAM_API_KEY }}
 
       - name: Image push summary
         run: |

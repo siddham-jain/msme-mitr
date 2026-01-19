@@ -28,12 +28,12 @@ async function testExtractionService(conversationId?: string) {
 
   // Create Supabase client with service role key for script usage
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY;
 
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('❌ Missing required environment variables:');
     if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL');
-    if (!supabaseServiceKey) console.error('  - SUPABASE_SERVICE_ROLE_KEY');
+    if (!supabaseServiceKey) console.error('  - SUPABASE_SECRET_KEY');
     console.error('\nPlease set these in your .env.local file');
     process.exit(1);
   }
@@ -48,10 +48,10 @@ async function testExtractionService(conversationId?: string) {
   try {
     // Step 1: Find a conversation to test
     let testConversationId = conversationId;
-    
+
     if (!testConversationId) {
       console.log('\n📋 Finding a recent conversation to test...');
-      
+
       const { data: conversations, error } = await supabase
         .from('conversations')
         .select('id, user_id, message_count, created_at')
@@ -73,7 +73,7 @@ async function testExtractionService(conversationId?: string) {
 
     // Step 2: Load conversation messages
     console.log('\n📨 Loading conversation messages...');
-    
+
     const { data: messages, error: msgError } = await supabase
       .from('messages')
       .select('id, role, content, created_at')
@@ -88,19 +88,19 @@ async function testExtractionService(conversationId?: string) {
     console.log(`✅ Loaded ${messages.length} messages`);
     console.log('\n💬 Conversation Preview:');
     console.log('-'.repeat(60));
-    
+
     messages.slice(0, 5).forEach((msg: any, idx: number) => {
       const preview = msg.content.substring(0, 80);
       console.log(`${idx + 1}. [${msg.role}]: ${preview}${msg.content.length > 80 ? '...' : ''}`);
     });
-    
+
     if (messages.length > 5) {
       console.log(`   ... and ${messages.length - 5} more messages`);
     }
 
     // Step 3: Check if extraction already exists
     console.log('\n🔍 Checking for existing extraction...');
-    
+
     const { data: existingAttributes } = await supabase
       .from('user_attributes')
       .select('*')
@@ -126,9 +126,9 @@ async function testExtractionService(conversationId?: string) {
 
     const extractionService = new ExtractionService(supabase);
     const startTime = Date.now();
-    
+
     const result = await extractionService.extractFromConversation(testConversationId!);
-    
+
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
 
     // Step 5: Display results
@@ -160,7 +160,7 @@ async function testExtractionService(conversationId?: string) {
     console.log(`Confidence:      ${(result.metadata.confidence * 100).toFixed(1)}%`);
     console.log(`Languages:       ${result.metadata.detectedLanguages.join(', ')}`);
     console.log(`Notes:           ${result.metadata.extractionNotes}`);
-    
+
     if (result.metadata.originalLanguageData) {
       console.log('\n🌐 Original Language Data:');
       console.log(JSON.stringify(result.metadata.originalLanguageData, null, 2));
@@ -168,10 +168,10 @@ async function testExtractionService(conversationId?: string) {
 
     // Step 6: Test storage (optional - only if confidence is high enough)
     const confidenceThreshold = parseFloat(process.env.EXTRACTION_CONFIDENCE_THRESHOLD || '0.5');
-    
+
     if (result.metadata.confidence >= confidenceThreshold) {
       console.log('\n💾 Testing storage...');
-      
+
       // Get user_id from conversation
       const { data: conv } = await supabase
         .from('conversations')
@@ -184,7 +184,7 @@ async function testExtractionService(conversationId?: string) {
         if (convData.user_id) {
           // Create a test job ID
           const testJobId = `test-${Date.now()}`;
-          
+
           try {
             await extractionService.storeExtractionResults(
               testConversationId!,
@@ -205,7 +205,7 @@ async function testExtractionService(conversationId?: string) {
 
     // Step 7: Verify stored data
     console.log('\n🔍 Verifying stored data...');
-    
+
     const { data: storedAttributes } = await supabase
       .from('user_attributes')
       .select('*')
@@ -229,12 +229,12 @@ async function testExtractionService(conversationId?: string) {
     console.error('\n❌ TEST FAILED');
     console.error('='.repeat(60));
     console.error('Error:', error);
-    
+
     if (error instanceof Error) {
       console.error('Message:', error.message);
       console.error('Stack:', error.stack);
     }
-    
+
     process.exit(1);
   }
 }

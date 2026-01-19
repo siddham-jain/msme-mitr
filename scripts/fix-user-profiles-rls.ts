@@ -24,7 +24,7 @@ import type { Database } from '@/types/database'
 // ============================================================================
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY!
 
 // ============================================================================
 // Helper Functions
@@ -53,7 +53,7 @@ async function fixUserProfilesRLS() {
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('❌ Missing required environment variables:')
     if (!supabaseUrl) console.error('  - NEXT_PUBLIC_SUPABASE_URL')
-    if (!supabaseServiceKey) console.error('  - SUPABASE_SERVICE_ROLE_KEY')
+    if (!supabaseServiceKey) console.error('  - SUPABASE_SECRET_KEY')
     console.error('\nPlease set these in your .env.local file')
     process.exit(1)
   }
@@ -62,16 +62,16 @@ async function fixUserProfilesRLS() {
     const supabase: SupabaseClient<Database> = createAdminClient()
 
     console.log('1️⃣  Dropping existing RLS policies...')
-    
+
     // Drop existing policies
     const dropPolicies = `
       DROP POLICY IF EXISTS "Users can view own profile" ON user_profiles;
       DROP POLICY IF EXISTS "Users can update own profile" ON user_profiles;
       DROP POLICY IF EXISTS "Users can insert own profile" ON user_profiles;
     `
-    
+
     const { error: dropError } = await (supabase.rpc as any)('exec_sql', { sql: dropPolicies })
-    
+
     if (dropError) {
       console.warn('⚠️  Could not drop policies (they may not exist):', dropError.message)
     } else {
@@ -79,11 +79,11 @@ async function fixUserProfilesRLS() {
     }
 
     console.log('\n2️⃣  Enabling RLS on user_profiles table...')
-    
+
     const enableRLS = `ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;`
-    
+
     const { error: rlsError } = await (supabase.rpc as any)('exec_sql', { sql: enableRLS })
-    
+
     if (rlsError) {
       console.warn('⚠️  RLS may already be enabled:', rlsError.message)
     } else {
@@ -91,7 +91,7 @@ async function fixUserProfilesRLS() {
     }
 
     console.log('\n3️⃣  Creating new RLS policies...')
-    
+
     // Create new policies
     const createPolicies = `
       -- Policy: Users can view their own profile
@@ -116,9 +116,9 @@ async function fixUserProfilesRLS() {
       TO authenticated
       WITH CHECK (auth.uid() = id);
     `
-    
+
     const { error: createError } = await (supabase.rpc as any)('exec_sql', { sql: createPolicies })
-    
+
     if (createError) {
       console.error('❌ Failed to create policies:', createError.message)
       console.error('\nPlease run this SQL manually in Supabase SQL Editor:')
@@ -129,15 +129,15 @@ async function fixUserProfilesRLS() {
     console.log('✅ New policies created')
 
     console.log('\n4️⃣  Verifying policies...')
-    
+
     // Test query as authenticated user
     console.log('   Testing profile query...')
-    
+
     const { data: profiles, error: testError } = await supabase
       .from('user_profiles')
       .select('id, email, role')
       .limit(1)
-    
+
     if (testError) {
       console.error('❌ Test query failed:', testError.message)
       console.error('   This may be expected if using service role key')

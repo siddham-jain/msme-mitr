@@ -9,7 +9,7 @@ global.TextDecoder = TextDecoder as any
 global.TransformStream = class TransformStream {
   readable: any
   writable: any
-  
+
   constructor() {
     this.readable = {}
     this.writable = {}
@@ -18,14 +18,14 @@ global.TransformStream = class TransformStream {
 
 // Mock environment variables for tests
 process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://test.supabase.co'
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-anon-key'
+process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || 'test-publishable-key'
 
 // Mock Web APIs for Next.js
 global.Request = class Request {
   url: string
   method: string
   headers: any
-  
+
   constructor(url: string, init?: any) {
     this.url = url
     this.method = init?.method || 'GET'
@@ -39,7 +39,7 @@ global.Response = class Response {
   status: number
   statusText: string
   headers: any
-  
+
   constructor(body: any, init?: any) {
     this.body = body
     this.init = init
@@ -47,7 +47,7 @@ global.Response = class Response {
     this.statusText = init?.statusText || 'OK'
     this.headers = init?.headers || new Map()
   }
-  
+
   static json(data: any, init?: any) {
     const response = new Response(JSON.stringify(data), {
       ...init,
@@ -59,7 +59,7 @@ global.Response = class Response {
     response.json = async () => data
     return response
   }
-  
+
   async json() {
     return JSON.parse(this.body)
   }
@@ -67,23 +67,23 @@ global.Response = class Response {
 
 global.Headers = class Headers {
   private headers: Map<string, string> = new Map()
-  
+
   set(name: string, value: string) {
     this.headers.set(name.toLowerCase(), value)
   }
-  
+
   get(name: string) {
     return this.headers.get(name.toLowerCase())
   }
-  
+
   has(name: string) {
     return this.headers.has(name.toLowerCase())
   }
-  
+
   delete(name: string) {
     this.headers.delete(name.toLowerCase())
   }
-  
+
   forEach(callback: (value: string, key: string) => void) {
     this.headers.forEach(callback)
   }
